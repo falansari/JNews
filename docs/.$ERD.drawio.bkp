@@ -488,7 +488,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="m52tT-IA9a-aKIksP_aE-232" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" value="Analytics" vertex="1">
-          <mxGeometry height="210" width="180" x="500" y="10" as="geometry" />
+          <mxGeometry height="210" width="180" x="570" y="10" as="geometry" />
         </mxCell>
         <mxCell id="m52tT-IA9a-aKIksP_aE-245" parent="m52tT-IA9a-aKIksP_aE-232" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1">
           <mxGeometry height="30" width="180" y="30" as="geometry" />
@@ -584,12 +584,6 @@
           <mxGeometry height="100" relative="1" width="100" as="geometry">
             <mxPoint x="500" y="410" as="sourcePoint" />
             <mxPoint x="640" y="90" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e58UMQFtYRo4XAv1O7ZD-1" edge="1" parent="1" source="m52tT-IA9a-aKIksP_aE-41" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmandOne;startArrow=ERmandOne;rounded=0;" target="m52tT-IA9a-aKIksP_aE-233" value="">
-          <mxGeometry height="100" relative="1" width="100" as="geometry">
-            <mxPoint x="380" y="490" as="sourcePoint" />
-            <mxPoint x="480" y="390" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
