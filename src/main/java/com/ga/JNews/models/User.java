@@ -30,10 +30,6 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Column
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private byte[] salt;
-
     /**
      * ADMIN, CAMPAIGN_MANAGER
      */
