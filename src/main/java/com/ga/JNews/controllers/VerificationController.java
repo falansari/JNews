@@ -1,6 +1,5 @@
 package com.ga.JNews.controllers;
 
-import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
 import com.ga.JNews.services.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;

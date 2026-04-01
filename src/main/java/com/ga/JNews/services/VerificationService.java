@@ -9,7 +9,6 @@ import com.ga.JNews.models.Verification;
 import com.ga.JNews.repositories.VerificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,11 +17,13 @@ import java.util.UUID;
 public class VerificationService {
     private final VerificationRepository verificationRepository;
     private final UserService userService;
+    private final MailService mailService;
 
     @Autowired
-    public VerificationService(VerificationRepository verificationRepository, UserService userService) {
+    public VerificationService(VerificationRepository verificationRepository, UserService userService, MailService mailService) {
         this.verificationRepository = verificationRepository;
         this.userService = userService;
+        this.mailService = mailService;
     }
 
     /**
@@ -40,7 +41,7 @@ public class VerificationService {
         token.setUser(user);
         verificationRepository.save(token);
 
-        // TODO: send verification email
+        mailService.sendVerificationMail(user, token.getToken());
 
         return token;
     }
