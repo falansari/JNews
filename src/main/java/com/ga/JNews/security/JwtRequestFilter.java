@@ -43,21 +43,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      * @param request HttpServletRequest
      * @param response HttpServletRequest
      * @param filterChain FilterChain
-     * @throws ServletException
-     * @throws IOException
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String jwt = parseJwt(request); // Step 1: parse token
-            System.out.println("jwt: ==> " + jwt);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) { // Step 2: validate token
                 String username = jwtUtils.getUserNameFromJwtToken(jwt); // Step 3: call & get username
-                System.out.println("username: ==> " + username);
-
                 UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username); // Step 4: get user details
-                System.out.println("userDetails: ==> " + userDetails.getUsername());
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()); // Step 5: Set authentication context

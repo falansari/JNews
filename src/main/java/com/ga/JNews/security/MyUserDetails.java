@@ -54,8 +54,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        //return UserDetails.super.isEnabled();
-        return true;
+        return user.getIsVerified() && !user.getIsDeleted();
     }
-
 }
