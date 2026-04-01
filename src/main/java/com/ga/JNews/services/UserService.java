@@ -2,6 +2,8 @@ package com.ga.JNews.services;
 
 import com.ga.JNews.exceptions.InformationExistException;
 import com.ga.JNews.models.User;
+import com.ga.JNews.models.requests.LoginRequest;
+import com.ga.JNews.models.responses.LoginResponse;
 import com.ga.JNews.repositories.UserRepository;
 import com.ga.JNews.security.JWTUtils;
 import com.ga.JNews.security.MyUserDetails;
@@ -47,5 +49,22 @@ public class UserService {
 
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public ResponseEntity<?> loginUser(LoginRequest loginRequest) { // <?> means any type
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(authenticationToken);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            myUserDetails = (MyUserDetails) authentication.getPrincipal();
+            assert myUserDetails != null;
+            final String JWT = jwtUtils.generateJwtToken(myUserDetails);
+            return ResponseEntity.ok(new LoginResponse(JWT));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new LoginResponse("Error: Invalid username or password"));
+        }
     }
 }

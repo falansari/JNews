@@ -25,3 +25,9 @@ public class UserController {
     public User register(@RequestBody User user) {
         return userService.createUser(user);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        return userService.loginUser(loginRequest);
+    }
+}
