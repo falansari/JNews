@@ -16,31 +16,31 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"password", "salt", "profile"})
+@ToString(exclude = {"password", "profile"})
 public class User {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     /**
      * ADMIN, CAMPAIGN_MANAGER
      */
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column
+    @Column(nullable = false)
     private Boolean isVerified;
 
-    @Column
+    @Column(nullable = false)
     private Boolean isDeleted;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
