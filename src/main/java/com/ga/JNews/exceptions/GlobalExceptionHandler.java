@@ -67,4 +67,16 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(e.getMessage());
     }
+
+    /**
+     * Handle unauthorized authentication exception
+     * @param e Exception
+     * @return ResponseEntity String
+     */
+    @ExceptionHandler(value = BadCredentialException.class)
+    public ResponseEntity<String> handleBadCredential(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
+    }
 }
