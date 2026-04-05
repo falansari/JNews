@@ -6,10 +6,15 @@ import com.ga.JNews.exceptions.InformationExistException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
+import com.ga.JNews.models.enums.TOKEN_TYPE;
 import com.ga.JNews.models.requests.ChangePasswordRequest;
+import com.ga.JNews.models.requests.ForgotPasswordRequest;
 import com.ga.JNews.models.requests.LoginRequest;
+import com.ga.JNews.models.requests.ResetPasswordRequest;
 import com.ga.JNews.models.responses.ChangePasswordResponse;
+import com.ga.JNews.models.responses.ForgotPasswordResponse;
 import com.ga.JNews.models.responses.LoginResponse;
+import com.ga.JNews.models.responses.ResetPasswordResponse;
 import com.ga.JNews.repositories.UserRepository;
 import com.ga.JNews.security.JWTUtils;
 import com.ga.JNews.security.MyUserDetails;
@@ -35,41 +40,49 @@ public class UserService {
     private MyUserDetails myUserDetails;
     private final AuthenticationManager authenticationManager;
     private final VerificationService verificationService;
+    private final MailService mailService;
 
     @Autowired
     public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder,
                        JWTUtils jwtUtils,
                        @Lazy AuthenticationManager authenticationManager, // @Lazy will not init this instance unless it's required
                        @Lazy MyUserDetails myUserDetails,
-                       @Lazy VerificationService verificationService) {
+                       @Lazy VerificationService verificationService,
+                       @Lazy MailService mailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.myUserDetails = myUserDetails;
         this.verificationService = verificationService;
+        this.mailService = mailService;
     }
 
     /**
      * Create new user object with own verification token in database.
-     * @param userObject New user data
+     * @param user New user data
      * @return User Saved user object
      */
-    public User createUser(User userObject) {
-        if (userRepository.existsByEmail(userObject.getEmail())) {
+    public User createUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new InformationExistException("A user with this email already exists");
         }
 
-        userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
-        User savedUser = userRepository.save(userObject);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User savedUser = userRepository.save(user);
 
         // Generate & save a verification token for the new user
-        Verification token = verificationService.generateVerificationToken(savedUser);
-        System.out.println("Verification Token: " + token.getToken());
+        Verification token = verificationService.generateVerificationToken(savedUser, TOKEN_TYPE.EMAIL_VERIFICATION_TOKEN);
+        mailService.sendVerificationMail(user, token.getToken()); // Send e-mail to user with token
 
         return savedUser;
     }
 
+    /**
+     * Get user object by email address.
+     * @param email String
+     * @return User
+     */
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -83,6 +96,11 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    /**
+     * Process user login request.
+     * @param loginRequest LoginRequest
+     * @return ResponseEntity
+     */
     public ResponseEntity<?> loginUser(LoginRequest loginRequest) { // <?> means any type
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
 
@@ -134,9 +152,6 @@ public class UserService {
      */
     public ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordRequest) {
         User user = getCurrentLoggedInUser();
-        System.out.println("old password: " + changePasswordRequest.getOldPassword());
-        System.out.println("new password: " + changePasswordRequest.getNewPassword());
-        System.out.println("confirm new password: " + changePasswordRequest.getConfirmNewPassword());
 
         // RULE 1: User inputs correct old password
         boolean passwordMatches = passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword());
@@ -163,5 +178,55 @@ public class UserService {
         userRepository.save(user);
 
         return new ChangePasswordResponse("Password changed successfully");
+    }
+
+    /**
+     * Validate forget password request and send reset password token via e-mail to the user.
+     * @param forgotPasswordRequest ForgotPasswordRequest email
+     * @return ForgotPasswordResponse OK message
+     */
+    public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        User user = userRepository.findByEmail(forgotPasswordRequest.getEmail());
+        String response = "An e-mail with a reset password token has been sent if this e-mail exists. Please use the token to reset your password";
+
+        if (user == null) { // User with this e-mail does not exist. Do nothing.
+            return new ForgotPasswordResponse(response);
+        }
+
+        // Generate & mail  a password reset token for the user
+        Verification token = verificationService.generateVerificationToken(user, TOKEN_TYPE.PASSWORD_RESET_TOKEN);
+        mailService.sendPasswordResetMail(user, token.getToken());
+
+        return new ForgotPasswordResponse(response);
+    }
+
+    /**
+     * Reset user's password.
+     * @param resetPasswordRequest ResetPasswordRequest token, password, confirmPassword
+     * @return ResetPasswordResponse OK / error message
+     */
+    public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        // RULE 1: User inputs correct token
+        boolean tokenIsValid = verificationService.verifyResetPasswordToken(resetPasswordRequest.getToken());
+        if (!tokenIsValid) {
+            throw new BadCredentialException("Invalid reset password token");
+        }
+
+        // RULE 2: User inputs new password
+        Assert.notNull(resetPasswordRequest.getPassword(), "New password is null");
+
+        // RULE 3: User confirms new password entry
+        boolean newPasswordConfirmed = Objects.equals(resetPasswordRequest.getPassword(), resetPasswordRequest.getConfirmPassword());
+        if (!newPasswordConfirmed) {
+            throw new BadCredentialException("New password and confirm new password are not a match");
+        }
+
+        User user = verificationService.getUserByToken(resetPasswordRequest.getToken());
+
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
+        userRepository.save(user);
+        verificationService.deleteToken(resetPasswordRequest.getToken());
+
+        return new ResetPasswordResponse("Password reset successfully. Please login again.");
     }
 }

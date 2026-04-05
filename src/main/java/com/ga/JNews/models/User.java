@@ -2,7 +2,7 @@ package com.ga.JNews.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ga.JNews.models.enums.Role;
+import com.ga.JNews.models.enums.ROLE;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,7 +35,7 @@ public class User {
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private ROLE role;
 
     @Column(nullable = false)
     private Boolean isVerified;
