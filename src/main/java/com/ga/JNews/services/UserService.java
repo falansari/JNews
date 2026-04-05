@@ -6,9 +6,12 @@ import com.ga.JNews.exceptions.InformationExistException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
+import com.ga.JNews.models.enums.TokenType;
 import com.ga.JNews.models.requests.ChangePasswordRequest;
+import com.ga.JNews.models.requests.ForgotPasswordRequest;
 import com.ga.JNews.models.requests.LoginRequest;
 import com.ga.JNews.models.responses.ChangePasswordResponse;
+import com.ga.JNews.models.responses.ForgotPasswordResponse;
 import com.ga.JNews.models.responses.LoginResponse;
 import com.ga.JNews.repositories.UserRepository;
 import com.ga.JNews.security.JWTUtils;
@@ -25,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -64,8 +68,7 @@ public class UserService {
         User savedUser = userRepository.save(userObject);
 
         // Generate & save a verification token for the new user
-        Verification token = verificationService.generateVerificationToken(savedUser);
-        System.out.println("Verification Token: " + token.getToken());
+        verificationService.generateVerificationToken(savedUser, TokenType.EMAIL_VERIFICATION_TOKEN);
 
         return savedUser;
     }
@@ -134,9 +137,6 @@ public class UserService {
      */
     public ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordRequest) {
         User user = getCurrentLoggedInUser();
-        System.out.println("old password: " + changePasswordRequest.getOldPassword());
-        System.out.println("new password: " + changePasswordRequest.getNewPassword());
-        System.out.println("confirm new password: " + changePasswordRequest.getConfirmNewPassword());
 
         // RULE 1: User inputs correct old password
         boolean passwordMatches = passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword());

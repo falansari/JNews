@@ -6,6 +6,7 @@ import com.ga.JNews.exceptions.BadRequestException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
+import com.ga.JNews.models.enums.TokenType;
 import com.ga.JNews.repositories.VerificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,17 +28,22 @@ public class VerificationService {
     }
 
     /**
-     * Generate a 128-bit UUID verification token for a new user.
+     * Generate a 128-bit UUID verification token for a user and e-mail it to them.
      * @return Verification Verification Token
      */
-    public Verification generateVerificationToken(User user) {
+    public Verification generateVerificationToken(User user, TokenType tokenType) {
         if (!userService.findUserByEmail(user.getEmail()).equals(user)) {
             throw new InformationNotFoundException("User with this e-mail does not exist.");
         }
 
+        if (!tokenType.equals(TokenType.EMAIL_VERIFICATION_TOKEN)) {
+            throw new BadRequestException("Token is not an email verification token.");
+        }
+
         Verification token = new Verification();
         token.setToken(UUID.randomUUID().toString());
-        token.setExpiryDate(LocalDateTime.now().plusMinutes(20));
+        token.setType(tokenType);
+        token.setExpiryDate(expiryTimeByTokenType(tokenType));
         token.setUser(user);
         verificationRepository.save(token);
 
@@ -70,7 +76,7 @@ public class VerificationService {
 
         verificationRepository.delete(verificationToken); // Delete the old token from db.
 
-        Verification newVerificationToken = generateVerificationToken(user);
+        Verification newVerificationToken = generateVerificationToken(user, verificationToken.getType());
 
         return verificationRepository.save(newVerificationToken);
     }
@@ -87,13 +93,15 @@ public class VerificationService {
             throw new AuthenticationException("Invalid email verification token.");
         }
 
+        if (!verificationToken.getType().equals(TokenType.EMAIL_VERIFICATION_TOKEN)) {
+            throw new AuthenticationException("This is not an email verification token");
+        }
+
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Verification token is expired. Please request a new one or contact an administrator for support.");
         }
 
         User user = verificationToken.getUser();
-        System.out.println("Token: " + verificationToken.getToken());
-        System.out.println("User: " + user.getEmail());
 
         if (!userService.userExists(user.getEmail())) {
             throw new AuthenticationException("User with this e-mail does not exist.");
@@ -108,5 +116,26 @@ public class VerificationService {
         verificationRepository.delete(verificationToken);
 
         return true;
+    }
+
+    /**
+     * Get expiry time by token type. Default value is 15 minutes from now.
+     * @param tokenType TokenType
+     * @return LocalDateTime
+     */
+    public LocalDateTime expiryTimeByTokenType(TokenType tokenType) {
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(15); // default value
+
+        switch (tokenType) {
+            case EMAIL_VERIFICATION_TOKEN ->   {
+                return LocalDateTime.now().plusDays(1);
+            }
+
+            case PASSWORD_RESET_TOKEN ->  {
+                return LocalDateTime.now().plusMinutes(20);
+            }
+        }
+
+        return expiryTime;
     }
 }
