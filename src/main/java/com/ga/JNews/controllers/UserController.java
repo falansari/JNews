@@ -1,7 +1,9 @@
 package com.ga.JNews.controllers;
 
 import com.ga.JNews.models.User;
+import com.ga.JNews.models.requests.ChangePasswordRequest;
 import com.ga.JNews.models.requests.LoginRequest;
+import com.ga.JNews.models.responses.ChangePasswordResponse;
 import com.ga.JNews.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +31,15 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         return userService.loginUser(loginRequest);
+    }
+
+    /**
+     * Change logged-in user's password with validation rules.
+     * @param changePasswordRequest ChangePasswordRequest oldPassword, newPassword, confirmNewPassword
+     * @return ChangePasswordResponse OK / error message.
+     */
+    @PostMapping("/change-password")
+    public ChangePasswordResponse changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        return userService.changePassword(changePasswordRequest);
     }
 }

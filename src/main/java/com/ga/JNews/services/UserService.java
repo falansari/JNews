@@ -1,11 +1,14 @@
 package com.ga.JNews.services;
 
 import com.ga.JNews.exceptions.AuthenticationException;
+import com.ga.JNews.exceptions.BadCredentialException;
 import com.ga.JNews.exceptions.InformationExistException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
+import com.ga.JNews.models.requests.ChangePasswordRequest;
 import com.ga.JNews.models.requests.LoginRequest;
+import com.ga.JNews.models.responses.ChangePasswordResponse;
 import com.ga.JNews.models.responses.LoginResponse;
 import com.ga.JNews.repositories.UserRepository;
 import com.ga.JNews.security.JWTUtils;
@@ -14,13 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -87,14 +92,14 @@ public class UserService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             myUserDetails = (MyUserDetails) authentication.getPrincipal();
-            assert myUserDetails != null;
+            Assert.notNull(myUserDetails, "Authentication principal is null");
             final String JWT = jwtUtils.generateJwtToken(myUserDetails);
             return ResponseEntity.ok(new LoginResponse(JWT));
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(new LoginResponse("Error: Invalid username or password"));
         } catch (DisabledException e) {
             return ResponseEntity.ok(new LoginResponse("Error: User unauthorized. Please verify your e-mail before login, else contact an administrator for support."));
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialException e) {
             return ResponseEntity.ok(new LoginResponse("Error: User with this e-mail does not exist"));
         }
     }
@@ -110,5 +115,53 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    /**
+     * Get current logged in user.
+     * @return User
+     */
+    public static User getCurrentLoggedInUser() {
+        MyUserDetails userDetails = (MyUserDetails) Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
+        Assert.notNull(userDetails, "Current logged in user is null");
+        return userDetails.getUser();
+    }
+
+    /**
+     * Change logged-in user's password.
+     * @param changePasswordRequest ChangePasswordRequest oldPassword, newPassword, confirmNewPassword
+     * @return ChangePasswordResponse OK / error message
+     */
+    public ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordRequest) {
+        User user = getCurrentLoggedInUser();
+        System.out.println("old password: " + changePasswordRequest.getOldPassword());
+        System.out.println("new password: " + changePasswordRequest.getNewPassword());
+        System.out.println("confirm new password: " + changePasswordRequest.getConfirmNewPassword());
+
+        // RULE 1: User inputs correct old password
+        boolean passwordMatches = passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword());
+        if (!passwordMatches) {
+            throw new BadCredentialException("Invalid old password");
+        }
+
+        // RULE 2: User inputs new password
+        Assert.notNull(changePasswordRequest.getNewPassword(), "New password is null");
+
+        // RULE 3: User confirms new password entry
+        boolean newPasswordConfirmed = Objects.equals(changePasswordRequest.getNewPassword(), changePasswordRequest.getConfirmNewPassword());
+        if (!newPasswordConfirmed) {
+            throw new BadCredentialException("New password and confirm new password are not a match");
+        }
+
+        // RULE 4: New password must not be the same as the old password
+        boolean passwordSame = passwordEncoder.matches(changePasswordRequest.getNewPassword(), user.getPassword());
+        if (passwordSame) {
+            throw new BadCredentialException("New password must not match old password");
+        }
+
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+
+        return new ChangePasswordResponse("Password changed successfully");
     }
 }
