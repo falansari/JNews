@@ -27,6 +27,24 @@ public class MailService {
         String message = "Salaam Alaikum " + user.getEmail() + ",\n\n"
                 + "Please verify your account by clicking on the link below:\n"
                 + url + "\n\n"
+                + "This link will expire within 1 day of issuing. You can request a new token if needed." + "\n\n"
+                + "Thank you for using JNews <3," + "\n"
+                + "JNews Development Team";
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        mailSender.send(mailMessage);
+    }
+
+    public void sendPasswordResetMail(User user, String token) {
+        String subject = "JNews User Password Reset Token";
+        String url = "http://localhost:8090/auth/users/reset?token=" + token;
+        String message = "Salaam Alaikum " + user.getEmail() + ",\n\n"
+                + "You can reset your account password by clicking on the link below:\n"
+                + url + "\n\n"
                 + "This link will expire within 20 minutes of issuing. You can request a new token if needed." + "\n\n"
                 + "Thank you for using JNews <3," + "\n"
                 + "JNews Development Team";
