@@ -108,4 +108,24 @@ public class ProfileService {
 
         return uploads.downloadImage(uploadImagePath, profile.getPhoto());
     }
+
+    /**
+     * Delete user profile's photo and reset it back to placeholder.png default photo.
+     * @return ResponseEntity Resource the newly set default profile image
+     */
+    public ResponseEntity<Resource> deletePhoto() {
+        Profile profile = getProfile();
+
+        if (profile.getPhoto() == null || profile.getPhoto().equals("placeholder.png")) {
+            return uploads.downloadImage(uploadImagePath, getProfile().getPhoto());
+        }
+
+        String defaultPhoto = Objects.requireNonNull(uploads.downloadImage(uploadImagePath, "placeholder.png").getBody()).getFilename();
+
+        uploads.deleteImage(uploadImagePath, profile.getPhoto());
+        profile.setPhoto(defaultPhoto);
+        profileRepository.save(profile);
+
+        return uploads.downloadImage(uploadImagePath, profile.getPhoto());
+    }
 }

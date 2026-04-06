@@ -52,8 +52,17 @@ public class ProfileController {
      * @param file MultipartFile [PNG, JPEG]
      * @return ResponseEntity Resource The newly uploaded photo
      */
-    @PostMapping(path = "photo/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Resource> uploadProfilePhoto(@RequestParam("file") MultipartFile file) {
         return profileService.uploadPhoto(file);
+    }
+
+    /**
+     * Delete user's profile photo and replace it with the placeholder.png image.
+     * @return ResponseEntity Resource the newly set default profile photo.
+     */
+    @DeleteMapping("/photo")
+    public ResponseEntity<Resource> deleteProfilePhoto() {
+        return profileService.deletePhoto();
     }
 }
