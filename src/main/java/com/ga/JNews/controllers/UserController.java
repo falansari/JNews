@@ -11,10 +11,7 @@ import com.ga.JNews.models.responses.ResetPasswordResponse;
 import com.ga.JNews.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/auth/users")
@@ -35,6 +32,15 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         return userService.loginUser(loginRequest);
+    }
+
+    /**
+     * Soft delete user by user's ID.
+     * @param userId Long
+     */
+    @DeleteMapping("/{userId}")
+    public void softDeleteUser(@PathVariable Long userId) {
+        userService.softDeleteUser(userId);
     }
 
     /**

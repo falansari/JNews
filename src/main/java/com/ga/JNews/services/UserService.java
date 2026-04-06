@@ -20,6 +20,7 @@ import com.ga.JNews.security.JWTUtils;
 import com.ga.JNews.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -65,7 +66,14 @@ public class UserService {
      */
     public User createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new InformationExistException("A user with this email already exists");
+            User existingUser = userRepository.findByEmail(user.getEmail());
+
+            if (existingUser.getIsDeleted()) { // re-enable user's account
+                existingUser.setIsDeleted(false);
+                return userRepository.save(existingUser);
+            } else {
+                throw new InformationExistException("A user with this email already exists");
+            }
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -116,7 +124,7 @@ public class UserService {
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(new LoginResponse("Error: Invalid username or password"));
         } catch (DisabledException e) {
-            return ResponseEntity.ok(new LoginResponse("Error: User unauthorized. Please verify your e-mail before login, else contact an administrator for support."));
+            return ResponseEntity.ok(new LoginResponse("Error: This user is disabled. Please contact an admin for support."));
         } catch (BadCredentialException e) {
             return ResponseEntity.ok(new LoginResponse("Error: User with this e-mail does not exist"));
         }
@@ -228,5 +236,16 @@ public class UserService {
         verificationService.deleteToken(resetPasswordRequest.getToken());
 
         return new ResetPasswordResponse("Password reset successfully. Please login again.");
+    }
+
+    /**
+     * Set user's status to deleted.
+     * @param userId Long User's ID
+     */
+    public void softDeleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new InformationNotFoundException("User with id " + userId + " does not exist"));
+
+        user.setIsDeleted(true);
+        userRepository.save(user);
     }
 }
