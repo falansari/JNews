@@ -49,7 +49,8 @@ public class SecurityConfiguration {
                                 "/auth/users/login",
                                 "/auth/users/register",
                                 "/auth/users/verify",
-                                "/auth/users/token"
+                                "/auth/users/token",
+                                "/auth/users/register/default"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

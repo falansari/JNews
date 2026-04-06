@@ -1,11 +1,9 @@
 package com.ga.JNews.services;
 
-import com.ga.JNews.exceptions.AuthenticationException;
-import com.ga.JNews.exceptions.BadCredentialException;
-import com.ga.JNews.exceptions.InformationExistException;
-import com.ga.JNews.exceptions.InformationNotFoundException;
+import com.ga.JNews.exceptions.*;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
+import com.ga.JNews.models.enums.ROLE;
 import com.ga.JNews.models.enums.TOKEN_TYPE;
 import com.ga.JNews.models.requests.ChangePasswordRequest;
 import com.ga.JNews.models.requests.ForgotPasswordRequest;
@@ -20,7 +18,6 @@ import com.ga.JNews.security.JWTUtils;
 import com.ga.JNews.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -60,7 +57,7 @@ public class UserService {
     }
 
     /**
-     * Create new user object with own verification token in database.
+     * Create new CAMPAIGN_MANAGER user object with own verification token in database.
      * @param user New user data
      * @return User Saved user object
      */
@@ -77,6 +74,9 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(ROLE.CAMPAIGN_MANAGER);
+        user.setIsDeleted(false);
+        user.setIsVerified(false);
         User savedUser = userRepository.save(user);
 
         // Generate & save a verification token for the new user
@@ -243,9 +243,45 @@ public class UserService {
      * @param userId Long User's ID
      */
     public void softDeleteUser(Long userId) {
+        if (getCurrentLoggedInUser().getRole() != ROLE.ADMIN) {
+            throw new AccessDeniedException("You do not have permission to perform this action.");
+        }
+
         User user = userRepository.findById(userId).orElseThrow(() -> new InformationNotFoundException("User with id " + userId + " does not exist"));
 
         user.setIsDeleted(true);
         userRepository.save(user);
+    }
+
+    /**
+     * Create the default admin user in database for new system setup. An admin must not already exist.
+     * @param admin User email, password
+     * @return User
+     */
+    public User createDefaultAdminUser(User admin) {
+        if (userRepository.existsByRole(ROLE.ADMIN)) {
+            throw new InformationExistException("User with role " + ROLE.ADMIN + " already exists.");
+        }
+
+        User createdAdmin = createUser(admin);
+        createdAdmin.setRole(ROLE.ADMIN);
+
+        return updateUser(createdAdmin);
+    }
+
+    /**
+     * Create ADMIN user. Only admins may create other admin user accounts.
+     * @param user User
+     * @return User
+     */
+    public User createAdminUser(User user) {
+        if (getCurrentLoggedInUser().getRole() != ROLE.ADMIN) {
+            throw new AccessDeniedException("You do not have permission to perform this action.");
+        }
+
+        User admin = createUser(user);
+        admin.setRole(ROLE.ADMIN);
+
+        return updateUser(admin);
     }
 }
