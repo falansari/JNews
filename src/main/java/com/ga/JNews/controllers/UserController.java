@@ -63,8 +63,33 @@ public class UserController {
         return userService.forgotPassword(forgotPasswordRequest);
     }
 
+    /**
+     * Reset user's password
+     * @param resetPasswordRequest ResetPasswordRequest
+     * @return ResetPasswordResponse OK / Error message
+     */
     @PostMapping("/reset")
     public ResetPasswordResponse resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
         return userService.resetPassword(resetPasswordRequest);
+    }
+
+    /**
+     * Create system default admin for initializing new system. An admin account should not already exist.
+     * @param user User
+     * @return User
+     */
+    @PostMapping("/register/default")
+    public User registerDefaultAdmin(@RequestBody User user) {
+        return userService.createDefaultAdminUser(user);
+    }
+
+    /**
+     * Create admin user account. Only logged in admin user may create other admin users.
+     * @param user User
+     * @return User
+     */
+    @PostMapping("/register/admin")
+    public User registerAdmin(@RequestBody User user) {
+        return userService.createAdminUser(user);
     }
 }
