@@ -1,0 +1,36 @@
+package com.ga.JNews.controllers;
+
+import com.ga.JNews.models.Profile;
+import com.ga.JNews.services.ProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(path = "profile")
+public class ProfileController {
+    private final ProfileService profileService;
+
+    @Autowired
+    public ProfileController(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
+    /**
+     * Get user's profile.
+     * @return Profile
+     */
+    @GetMapping("")
+    public Profile getProfile() {
+        return profileService.getProfile();
+    }
+
+    /**
+     * Create user profile.
+     * @param profile Profile firstName, lastName, photo (uses default placeholder.png), logged-in User
+     * @return Profile
+     */
+    @PostMapping("/create")
+    public Profile createProfile(@RequestBody Profile profile) {
+        return profileService.createProfile(profile);
+    }
+}
