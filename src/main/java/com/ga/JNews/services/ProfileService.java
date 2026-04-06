@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -89,5 +90,22 @@ public class ProfileService {
         if (user == null) throw new InformationNotFoundException("You must login to download profile photo");
 
         return uploads.downloadImage(uploadImagePath, getProfile().getPhoto());
+    }
+
+    /**
+     * Upload user profile photo
+     * @param file MultipartFile PNG, JPG
+     * @return ResponseEntity Resource
+     */
+    public ResponseEntity<Resource> uploadPhoto(MultipartFile file) {
+        Profile profile = getProfile();
+
+        if (profile.getPhoto() != null && !profile.getPhoto().equals("placeholder.png")) uploads.deleteImage(uploadImagePath, profile.getPhoto()); // Delete existing photo from storage
+
+        String newPhoto = uploads.uploadImage(uploadImagePath, file);
+        profile.setPhoto(newPhoto);
+        profileRepository.save(profile);
+
+        return uploads.downloadImage(uploadImagePath, profile.getPhoto());
     }
 }
