@@ -3,6 +3,8 @@ package com.ga.JNews.controllers;
 import com.ga.JNews.models.Profile;
 import com.ga.JNews.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,5 +34,14 @@ public class ProfileController {
     @PostMapping("/create")
     public Profile createProfile(@RequestBody Profile profile) {
         return profileService.createProfile(profile);
+    }
+
+    /**
+     * Download stored user's CPR image.
+     * @return ResponseEntity Resource The image
+     */
+    @GetMapping("/photo")
+    public ResponseEntity<Resource> getCPRImage() {
+        return profileService.downloadPhoto();
     }
 }

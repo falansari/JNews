@@ -7,6 +7,8 @@ import com.ga.JNews.models.User;
 import com.ga.JNews.repositories.ProfileRepository;
 import com.ga.JNews.utilities.Uploads;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -75,5 +77,17 @@ public class ProfileService {
         userService.updateUser(user);
 
         return getProfile();
+    }
+
+    /**
+     * Download stored user's profile image
+     * @return ResponseEntity Resource The stored image if any [PNG, JPEG]
+     */
+    public ResponseEntity<Resource> downloadPhoto() {
+        User user = UserService.getCurrentLoggedInUser();
+
+        if (user == null) throw new InformationNotFoundException("You must login to download profile photo");
+
+        return uploads.downloadImage(uploadImagePath, getProfile().getPhoto());
     }
 }
