@@ -33,9 +33,19 @@ public class ProfileController {
      * @param profile Profile firstName, lastName, photo (uses default placeholder.png), logged-in User
      * @return Profile
      */
-    @PostMapping("/create")
+    @PostMapping("")
     public Profile createProfile(@RequestBody Profile profile) {
         return profileService.createProfile(profile);
+    }
+
+    /**
+     * Update user's profile information
+     * @param profile Profile
+     * @return Profile updated profile
+     */
+    @PatchMapping("")
+    public Profile updateProfile(@RequestBody Profile profile) {
+        return profileService.updateProfile(profile);
     }
 
     /**
@@ -52,7 +62,7 @@ public class ProfileController {
      * @param file MultipartFile [PNG, JPEG]
      * @return ResponseEntity Resource The newly uploaded photo
      */
-    @PostMapping(path = "photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Resource> uploadProfilePhoto(@RequestParam("file") MultipartFile file) {
         return profileService.uploadPhoto(file);
     }

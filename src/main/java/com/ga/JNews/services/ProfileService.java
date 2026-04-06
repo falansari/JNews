@@ -81,6 +81,19 @@ public class ProfileService {
     }
 
     /**
+     * Update user's profile data
+     * @param updatedProfile Profile
+     * @return Profile updated profile
+     */
+    public Profile updateProfile(Profile updatedProfile) {
+        Profile profile = getProfile();
+        if (updatedProfile.getFirstName() != null) profile.setFirstName(updatedProfile.getFirstName());
+        if (updatedProfile.getLastName() != null) profile.setLastName(updatedProfile.getLastName());
+
+        return profileRepository.save(profile);
+    }
+
+    /**
      * Download stored user's profile image
      * @return ResponseEntity Resource The stored image if any [PNG, JPEG]
      */
