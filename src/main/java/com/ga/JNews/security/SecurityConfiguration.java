@@ -50,7 +50,9 @@ public class SecurityConfiguration {
                                 "/auth/users/register",
                                 "/auth/users/verify",
                                 "/auth/users/token",
-                                "/auth/users/register/default"
+                                "/auth/users/register/default",
+                                "/subscribers/subscribe",
+                                "/subscribers/unsubscribe"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

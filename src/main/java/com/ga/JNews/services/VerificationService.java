@@ -6,7 +6,7 @@ import com.ga.JNews.exceptions.BadRequestException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
-import com.ga.JNews.models.enums.TOKEN_TYPE;
+import com.ga.JNews.models.enums.TokenType;
 import com.ga.JNews.repositories.VerificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class VerificationService {
      * Generate a 128-bit UUID verification token for a user.
      * @return Verification Verification Token
      */
-    public Verification generateVerificationToken(User user, TOKEN_TYPE tokenType) {
+    public Verification generateVerificationToken(User user, TokenType tokenType) {
         if (!userService.findUserByEmail(user.getEmail()).equals(user)) {
             throw new InformationNotFoundException("User with this e-mail does not exist.");
         }
@@ -85,7 +85,7 @@ public class VerificationService {
             throw new AuthenticationException("Invalid email verification token.");
         }
 
-        if (!verificationToken.getType().equals(TOKEN_TYPE.EMAIL_VERIFICATION_TOKEN)) {
+        if (!verificationToken.getType().equals(TokenType.EMAIL_VERIFICATION_TOKEN)) {
             throw new AuthenticationException("This is not an email verification token");
         }
 
@@ -112,10 +112,10 @@ public class VerificationService {
 
     /**
      * Get expiry time by token type. Default value is 15 minutes from now.
-     * @param tokenType TOKEN_TYPE
+     * @param tokenType TokenType
      * @return LocalDateTime
      */
-    public LocalDateTime expiryTimeByTokenType(TOKEN_TYPE tokenType) {
+    public LocalDateTime expiryTimeByTokenType(TokenType tokenType) {
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(15); // default value
 
         switch (tokenType) {
@@ -143,7 +143,7 @@ public class VerificationService {
             throw new AuthenticationException("Invalid password reset token.");
         }
 
-        if (!verificationToken.getType().equals(TOKEN_TYPE.PASSWORD_RESET_TOKEN)) {
+        if (!verificationToken.getType().equals(TokenType.PASSWORD_RESET_TOKEN)) {
             throw new AuthenticationException("This is not a password reset token");
         }
 
