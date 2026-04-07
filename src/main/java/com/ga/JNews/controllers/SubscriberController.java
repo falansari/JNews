@@ -77,4 +77,14 @@ public class SubscriberController {
     public Subscriber unsubscribe(@RequestParam("email") String email) {
         return subscriberService.setSubscriberStatus(email, SubscriberStatus.UNSUBSCRIBED);
     }
+
+    /**
+     * Hard delete a subscriber from the system. Deletes all associated mails as well.
+     * @param id Long
+     * @return boolean true if successful, otherwise throws an error.
+     */
+    @DeleteMapping("/{id}")
+    public boolean deleteSubscriber(@PathVariable("id") Long id) {
+        return subscriberService.deleteSubscriber(id);
+    }
 }
