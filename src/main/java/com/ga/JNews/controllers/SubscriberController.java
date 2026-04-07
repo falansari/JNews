@@ -1,6 +1,7 @@
 package com.ga.JNews.controllers;
 
 import com.ga.JNews.models.Subscriber;
+import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.services.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,38 @@ public class SubscriberController {
      * @return Subscriber
      */
     @PostMapping("/subscribe")
-    public Subscriber subscribe(@RequestBody Subscriber subscriber) {
+    public Subscriber createSubscriber(@RequestBody Subscriber subscriber) {
         return subscriberService.createSubscriber(subscriber);
+    }
+
+    /**
+     * Update the info (email or name) of a subscriber.
+     * @param id Long Subscriber's id
+     * @param subscriber Subscriber email and/or name
+     * @return Subscriber after update
+     */
+    @PatchMapping("/{id}")
+    public Subscriber updateSubscriber(@PathVariable("id") Long id, @RequestBody Subscriber subscriber) {
+        return subscriberService.updateSubscriber(id, subscriber);
+    }
+
+    /**
+     * Subscribe an existing unsubscribed member.
+     * @param email String Subscriber's email
+     * @return Subscriber
+     */
+    @PatchMapping("/subscribe")
+    public Subscriber subscribe(@RequestParam("email") String email) {
+        return subscriberService.setSubscriberStatus(email, SubscriberStatus.SUBSCRIBED);
+    }
+
+    /**
+     * Unsubscribe an existing subscribed member.
+     * @param email String Subscriber's email
+     * @return Subscriber
+     */
+    @PatchMapping("/unsubscribe")
+    public Subscriber unsubscribe(@RequestParam("email") String email) {
+        return subscriberService.setSubscriberStatus(email, SubscriberStatus.UNSUBSCRIBED);
     }
 }
