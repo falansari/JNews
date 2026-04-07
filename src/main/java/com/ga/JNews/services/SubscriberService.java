@@ -84,4 +84,18 @@ public class SubscriberService {
         existingSubscriber.setStatus(status);
         return subscriberRepository.save(existingSubscriber);
     }
+
+    /**
+     * Hard delete a subscriber from the system. Removes all associated mail data as well.
+     * @param id Long
+     * @return boolean True if successful, else throws an error.
+     */
+    public boolean deleteSubscriber(Long id) {
+        if (!subscriberRepository.existsById(id)) {
+            throw new InformationNotFoundException("Subscriber with id " + id + " not found");
+        }
+
+        subscriberRepository.deleteById(id);
+        return true;
+    }
 }
