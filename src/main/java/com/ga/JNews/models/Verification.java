@@ -1,6 +1,6 @@
 package com.ga.JNews.models;
 
-import com.ga.JNews.models.enums.TOKEN_TYPE;
+import com.ga.JNews.models.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class Verification {
     private String token;
 
     @Column(nullable = false)
-    private TOKEN_TYPE type;
+    private TokenType type;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

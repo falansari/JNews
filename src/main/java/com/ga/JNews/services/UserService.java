@@ -3,8 +3,8 @@ package com.ga.JNews.services;
 import com.ga.JNews.exceptions.*;
 import com.ga.JNews.models.User;
 import com.ga.JNews.models.Verification;
-import com.ga.JNews.models.enums.ROLE;
-import com.ga.JNews.models.enums.TOKEN_TYPE;
+import com.ga.JNews.models.enums.Role;
+import com.ga.JNews.models.enums.TokenType;
 import com.ga.JNews.models.requests.ChangePasswordRequest;
 import com.ga.JNews.models.requests.ForgotPasswordRequest;
 import com.ga.JNews.models.requests.LoginRequest;
@@ -74,13 +74,13 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(ROLE.CAMPAIGN_MANAGER);
+        user.setRole(Role.CAMPAIGN_MANAGER);
         user.setIsDeleted(false);
         user.setIsVerified(false);
         User savedUser = userRepository.save(user);
 
         // Generate & save a verification token for the new user
-        Verification token = verificationService.generateVerificationToken(savedUser, TOKEN_TYPE.EMAIL_VERIFICATION_TOKEN);
+        Verification token = verificationService.generateVerificationToken(savedUser, TokenType.EMAIL_VERIFICATION_TOKEN);
         mailService.sendVerificationMail(user, token.getToken()); // Send e-mail to user with token
 
         return savedUser;
@@ -202,7 +202,7 @@ public class UserService {
         }
 
         // Generate & mail  a password reset token for the user
-        Verification token = verificationService.generateVerificationToken(user, TOKEN_TYPE.PASSWORD_RESET_TOKEN);
+        Verification token = verificationService.generateVerificationToken(user, TokenType.PASSWORD_RESET_TOKEN);
         mailService.sendPasswordResetMail(user, token.getToken());
 
         return new ForgotPasswordResponse(response);
@@ -243,7 +243,7 @@ public class UserService {
      * @param userId Long User's ID
      */
     public void softDeleteUser(Long userId) {
-        if (getCurrentLoggedInUser().getRole() != ROLE.ADMIN) {
+        if (getCurrentLoggedInUser().getRole() != Role.ADMIN) {
             throw new AccessDeniedException("You do not have permission to perform this action.");
         }
 
@@ -259,12 +259,12 @@ public class UserService {
      * @return User
      */
     public User createDefaultAdminUser(User admin) {
-        if (userRepository.existsByRole(ROLE.ADMIN)) {
-            throw new InformationExistException("User with role " + ROLE.ADMIN + " already exists.");
+        if (userRepository.existsByRole(Role.ADMIN)) {
+            throw new InformationExistException("User with role " + Role.ADMIN + " already exists.");
         }
 
         User createdAdmin = createUser(admin);
-        createdAdmin.setRole(ROLE.ADMIN);
+        createdAdmin.setRole(Role.ADMIN);
 
         return updateUser(createdAdmin);
     }
@@ -275,12 +275,12 @@ public class UserService {
      * @return User
      */
     public User createAdminUser(User user) {
-        if (getCurrentLoggedInUser().getRole() != ROLE.ADMIN) {
+        if (getCurrentLoggedInUser().getRole() != Role.ADMIN) {
             throw new AccessDeniedException("You do not have permission to perform this action.");
         }
 
         User admin = createUser(user);
-        admin.setRole(ROLE.ADMIN);
+        admin.setRole(Role.ADMIN);
 
         return updateUser(admin);
     }
