@@ -6,11 +6,23 @@ import com.ga.JNews.models.Subscriber;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.repositories.SubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Service
 public class SubscriberService {
     private final SubscriberRepository subscriberRepository;
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Autowired
     public SubscriberService(SubscriberRepository subscriberRepository) {
@@ -97,5 +109,38 @@ public class SubscriberService {
 
         subscriberRepository.deleteById(id);
         return true;
+    }
+
+    /**
+     * Create new subscribers from an email list. Multi-threading supported.
+     * Skips subscribers that already exist in the database.
+     * @param file MultipartFile CSV, plain text.
+     * @return List Newly added subscribers, or empty ArrayList if none new.
+     */
+    @Async("executor")
+    public CompletableFuture<ArrayList<Subscriber>> createSubscribers(MultipartFile file) {
+        lock.writeLock().lock();
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+            String email;
+            ArrayList<Subscriber> newSubscribersList = new ArrayList<>();
+
+            while ((email = bufferedReader.readLine()) != null) {
+                email = email.replace("\uFEFF", "").trim(); // Remove BOM characters from first line in CSV files
+
+                if (subscriberRepository.existsByEmail(email)) continue; // Skip already existing subscriber.
+
+                Subscriber subscriber = new Subscriber();
+                subscriber.setEmail(email);
+                newSubscribersList.add(createSubscriber(subscriber));
+            }
+
+            return CompletableFuture.completedFuture(newSubscribersList);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading csv file: " + e.getMessage());
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 }

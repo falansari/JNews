@@ -4,7 +4,12 @@ import com.ga.JNews.models.Subscriber;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.services.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(path = "subscribers")
@@ -86,5 +91,16 @@ public class SubscriberController {
     @DeleteMapping("/{id}")
     public boolean deleteSubscriber(@PathVariable("id") Long id) {
         return subscriberService.deleteSubscriber(id);
+    }
+
+    /**
+     * Create new subscribers from an email list.
+     * @param file MultipartFile CSV, plain-text.
+     * @apiNote Asynchronous operation, supports multithreading.
+     * @return ArrayList Newly added subscribers.
+     */
+    @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CompletableFuture<ArrayList<Subscriber>> createSubscribers(@RequestParam("file") MultipartFile file) {
+        return subscriberService.createSubscribers(file);
     }
 }
