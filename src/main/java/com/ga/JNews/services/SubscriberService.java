@@ -1,5 +1,6 @@
 package com.ga.JNews.services;
 
+import com.ga.JNews.exceptions.BadRequestException;
 import com.ga.JNews.exceptions.InformationExistException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.Subscriber;
@@ -45,6 +46,10 @@ public class SubscriberService {
      * @return Subscriber
      */
     public Subscriber getSubscriberByEmail(String email) {
+        if (!emailIsValid(email)) {
+            throw new BadRequestException(email + " is not a valid e-mail address.");
+        }
+
         Subscriber subscriber = subscriberRepository.findByEmail(email);
 
         if (subscriber == null) {
@@ -61,6 +66,10 @@ public class SubscriberService {
      * @return Subscriber
      */
     public Subscriber createSubscriber(Subscriber subscriber) {
+        if (!emailIsValid(subscriber.getEmail())) {
+            throw new BadRequestException(subscriber.getEmail() + " is not a valid e-mail address.");
+        }
+
         if (subscriberRepository.existsByEmail(subscriber.getEmail())) {
             throw new InformationExistException("Subscriber with email " + subscriber.getEmail() + " already exists");
         }
@@ -76,7 +85,9 @@ public class SubscriberService {
     public Subscriber updateSubscriber(Long id, Subscriber subscriber) {
         Subscriber existingSubscriber = subscriberRepository.findById(id).orElseThrow(() -> new InformationNotFoundException("Subscriber with id " + id + " not found"));
 
-        if (subscriber.getEmail() != null) existingSubscriber.setEmail(subscriber.getEmail());
+        if (subscriber.getEmail() != null && emailIsValid(subscriber.getEmail())) {
+            existingSubscriber.setEmail(subscriber.getEmail());
+        }
         if (subscriber.getName() != null) existingSubscriber.setName(subscriber.getName());
 
         return subscriberRepository.save(existingSubscriber);
@@ -89,6 +100,10 @@ public class SubscriberService {
      * @return Subscriber
      */
     public Subscriber setSubscriberStatus(String email, SubscriberStatus status) {
+        if (!emailIsValid(email)) {
+            throw new BadRequestException(email + " is not a valid e-mail address.");
+        }
+
         if (!subscriberRepository.existsByEmail(email)) {
             throw new InformationNotFoundException("Subscriber with email " + email + " not found");
         }
