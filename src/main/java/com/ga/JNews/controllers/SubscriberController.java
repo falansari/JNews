@@ -4,7 +4,9 @@ import com.ga.JNews.models.Subscriber;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.services.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,5 +113,13 @@ public class SubscriberController {
     @GetMapping("/list")
     public CompletableFuture<ArrayList<Subscriber>> getSubscribersList() {
         return subscriberService.getSubscribersList();
+    }
+
+    /**
+     * Download stored subscribers CSV file. Asynchronous operation, supports multithreading.
+     */
+    @GetMapping("/export")
+    public CompletableFuture<ResponseEntity<Resource>> exportSubscribers() {
+        return subscriberService.exportSubscribersToFile();
     }
 }

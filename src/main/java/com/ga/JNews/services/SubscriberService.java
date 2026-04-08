@@ -8,14 +8,19 @@ import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.repositories.SubscriberRepository;
 import jakarta.mail.internet.InternetAddress;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -186,5 +191,48 @@ public class SubscriberService {
      */
     public CompletableFuture<ArrayList<Subscriber>> getSubscribersList() {
         return subscriberRepository.findAllBy();
+    }
+
+    /**
+     * Export complete Subscribers list to CSV file. Asynchronous operation, supports multithreading.
+     * @return CompletableFuture ResponseEntity Resource text/csv
+     */
+    @Async("executor")
+    public CompletableFuture<ResponseEntity<Resource>> exportSubscribersToFile() {
+        String folder = "exports/";
+        String filename = folder + "subscribers_"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss")) +".csv";
+        CompletableFuture<ArrayList<Subscriber>> subscribers = getSubscribersList();
+
+        File file = new File(filename);
+        file.getParentFile().mkdirs();
+
+        return subscribers.thenApplyAsync(list -> {
+            lock.writeLock().lock();
+
+            try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+                writer.write("id,email,name,status,created_at,updated_at\n");
+
+                for (Subscriber subscriber : list) {
+                    writer.write(
+                            subscriber.getId() + ","
+                            + subscriber.getEmail() + ","
+                            + subscriber.getName() + ","
+                            + subscriber.getStatus() + ","
+                            + subscriber.getCreatedAt() + ","
+                            + subscriber.getUpdatedAt() + "\n"
+                    );
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error while creating csv file: " + e.getMessage());
+            } finally {
+                lock.writeLock().unlock();
+            }
+
+            Resource resourceFile = new FileSystemResource(file);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("text/csv"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + folder + resourceFile.getFilename())
+                    .body(resourceFile);
+        });
     }
 }
