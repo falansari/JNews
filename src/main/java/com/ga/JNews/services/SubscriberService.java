@@ -5,6 +5,7 @@ import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.Subscriber;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.repositories.SubscriberRepository;
+import jakarta.mail.internet.InternetAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -129,6 +130,11 @@ public class SubscriberService {
             while ((email = bufferedReader.readLine()) != null) {
                 email = email.replace("\uFEFF", "").trim(); // Remove BOM characters from first line in CSV files
 
+                if (!emailIsValid(email)) {
+                    System.out.println("Skipping invalid e-mail: " + email);
+                    continue;
+                }
+
                 if (subscriberRepository.existsByEmail(email)) continue; // Skip already existing subscriber.
 
                 Subscriber subscriber = new Subscriber();
@@ -141,6 +147,21 @@ public class SubscriberService {
             throw new RuntimeException("Error while reading csv file: " + e.getMessage());
         } finally {
             lock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Validate if an input e-mail is a valid mail address or not.
+     * @param email String
+     * @return boolean true if valid, false otherwise.
+     */
+    public static boolean emailIsValid(String email) {
+        try {
+            InternetAddress emailAddress = new InternetAddress(email);
+            emailAddress.validate();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
