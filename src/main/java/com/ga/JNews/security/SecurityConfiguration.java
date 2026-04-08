@@ -28,8 +28,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JwtRequestFilter authenticationJwtTokenFilter() {
-        return new JwtRequestFilter();
+    public JWTRequestFilter authenticationJwtTokenFilter() {
+        return new JWTRequestFilter();
     }
 
     @Bean
