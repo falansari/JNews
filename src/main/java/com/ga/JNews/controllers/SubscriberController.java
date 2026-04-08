@@ -103,4 +103,13 @@ public class SubscriberController {
     public CompletableFuture<ArrayList<Subscriber>> createSubscribers(@RequestParam("file") MultipartFile file) {
         return subscriberService.createSubscribers(file);
     }
+
+    /**
+     * Get all subscribers from database. Asynchronous operation.
+     * @return CompletableFuture ArrayList Subscribers
+     */
+    @GetMapping("/list")
+    public CompletableFuture<ArrayList<Subscriber>> getSubscribersList() {
+        return subscriberService.getSubscribersList();
+    }
 }

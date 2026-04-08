@@ -179,4 +179,12 @@ public class SubscriberService {
             return false;
         }
     }
+
+    /**
+     * Get list of all subscribers from database. Asynchronous operation.
+     * @return CompletableFuture ArrayList Subscriber
+     */
+    public CompletableFuture<ArrayList<Subscriber>> getSubscribersList() {
+        return subscriberRepository.findAllBy();
+    }
 }
