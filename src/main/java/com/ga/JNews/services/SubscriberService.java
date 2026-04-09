@@ -235,4 +235,57 @@ public class SubscriberService {
                     .body(resourceFile);
         });
     }
+
+    /**
+     * Creates subscribers and updates existing ones from CSV file with full subscriber info. Multi-threading supported.
+     * Skips subscribers that already exist in the database.
+     * @param file MultipartFile CSV, plain text. [id,email,name,status]
+     * @apiNote IMPORTANT: First row assumed header and skipped.
+     * @return List Newly added subscribers, or empty ArrayList if none new.
+     */
+    @Async("executor")
+    public CompletableFuture<ArrayList<Subscriber>> importSubscribersFromFile(MultipartFile file) {
+        lock.writeLock().lock();
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+            String line;
+            ArrayList<Subscriber> subscriberArrayList = new ArrayList<>();
+            bufferedReader.readLine(); // skip first line assumed header
+
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] data = line.split(",", -1); // keep trailing empty strings, for rows with missing data points
+                Long id = !data[0].isEmpty() ? Long.parseLong(data[0]) :  0;
+                String email = !data[1].isEmpty() ? data[1] : "";
+                String name = !data[2].isEmpty() ? data[2] : null;
+                SubscriberStatus status = !data[3].isEmpty() ? SubscriberStatus.valueOf(data[3]) : SubscriberStatus.SUBSCRIBED;
+
+                if (subscriberRepository.findById(id).isPresent()) { // update existing record
+                    Subscriber subscriber = subscriberRepository.findById(id).get();
+                    if (emailIsValid(email)) subscriber.setEmail(email);
+                    if (name != null) subscriber.setName(name);
+                    subscriber.setStatus(status);
+                    Subscriber updatedSubscriber = updateSubscriber(id, subscriber);
+                    subscriberArrayList.add(updatedSubscriber);
+
+                } else { // add new record
+                    if (!emailIsValid(email)) continue; // skip row with invalid email address
+                    if (subscriberRepository.existsByEmail(email)) continue; // skip row with existing email in db
+
+                    Subscriber subscriber = new Subscriber();
+                    subscriber.setEmail(email);
+                    if (name != null) subscriber.setName(name);
+                    subscriber.setStatus(status);
+                    Subscriber newSubscriber = createSubscriber(subscriber);
+                    subscriberArrayList.add(newSubscriber);
+                }
+            }
+
+            return CompletableFuture.completedFuture(subscriberArrayList);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading csv file: " + e.getMessage());
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
 }

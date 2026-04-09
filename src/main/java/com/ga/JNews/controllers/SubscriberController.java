@@ -122,4 +122,16 @@ public class SubscriberController {
     public CompletableFuture<ResponseEntity<Resource>> exportSubscribers() {
         return subscriberService.exportSubscribersToFile();
     }
+
+    /**
+     * Creates subscribers and updates existing ones from CSV file with full subscriber info. Multi-threading supported.
+     * Skips subscribers that already exist in the database.
+     * @param file MultipartFile CSV, plain text. [id,email,name,status]
+     * @apiNote IMPORTANT: First row assumed header and skipped.
+     * @return List Newly added subscribers, or empty ArrayList if none new.
+     */
+    @PostMapping(path = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CompletableFuture<ArrayList<Subscriber>> importSubscribers(@RequestParam("file") MultipartFile file) {
+        return subscriberService.importSubscribersFromFile(file);
+    }
 }
