@@ -4,7 +4,9 @@ import com.ga.JNews.models.Subscriber;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.services.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -102,5 +104,34 @@ public class SubscriberController {
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CompletableFuture<ArrayList<Subscriber>> createSubscribers(@RequestParam("file") MultipartFile file) {
         return subscriberService.createSubscribers(file);
+    }
+
+    /**
+     * Get all subscribers from database. Asynchronous operation.
+     * @return CompletableFuture ArrayList Subscribers
+     */
+    @GetMapping("/list")
+    public CompletableFuture<ArrayList<Subscriber>> getSubscribersList() {
+        return subscriberService.getSubscribersList();
+    }
+
+    /**
+     * Download stored subscribers CSV file. Asynchronous operation, supports multithreading.
+     */
+    @GetMapping("/export")
+    public CompletableFuture<ResponseEntity<Resource>> exportSubscribers() {
+        return subscriberService.exportSubscribersToFile();
+    }
+
+    /**
+     * Creates subscribers and updates existing ones from CSV file with full subscriber info. Multi-threading supported.
+     * Skips subscribers that already exist in the database.
+     * @param file MultipartFile CSV, plain text. [id,email,name,status]
+     * @apiNote IMPORTANT: First row assumed header and skipped.
+     * @return List Newly added subscribers, or empty ArrayList if none new.
+     */
+    @PostMapping(path = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CompletableFuture<ArrayList<Subscriber>> importSubscribers(@RequestParam("file") MultipartFile file) {
+        return subscriberService.importSubscribersFromFile(file);
     }
 }
