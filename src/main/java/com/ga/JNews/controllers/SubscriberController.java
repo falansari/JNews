@@ -134,4 +134,23 @@ public class SubscriberController {
     public CompletableFuture<ArrayList<Subscriber>> importSubscribers(@RequestParam("file") MultipartFile file) {
         return subscriberService.importSubscribersFromFile(file);
     }
+
+    /**
+     * Delete all subscribers from storage. Asynchronous transaction.
+     * @return CompletableFuture Integer Total number of affected rows.
+     */
+    @DeleteMapping("/delete")
+    public CompletableFuture<Integer> deleteAllSubscribers() {
+       return subscriberService.deleteSubscribers();
+    }
+
+    /**
+     * Delete subscribers from storage by their status. Asynchronous transaction.
+     * @param status String SUBSCRIBED, UNSUBSCRIBED
+     * @return CompletableFuture Integer Total number of affected rows.
+     */
+    @DeleteMapping("/delete/{status}")
+    public CompletableFuture<Integer> deleteSubscribersByStatus(@PathVariable("status") String status) {
+        return subscriberService.deleteSubscribers(SubscriberStatus.valueOf(status));
+    }
 }

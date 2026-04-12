@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -287,5 +288,27 @@ public class SubscriberService {
         } finally {
             lock.writeLock().unlock();
         }
+    }
+
+    /**
+     * Delete subscribers from storage by their status. Asynchronous.
+     * @param status SubscriberStatus SUBSCRIBED, UNSUBSCRIBED
+     * @return CompletableFuture Integer Total number of affected rows.
+     */
+    @Async("executor")
+    public CompletableFuture<Integer> deleteSubscribers(SubscriberStatus status) {
+        return subscriberRepository.deleteAllByStatus(status);
+    }
+
+    /**
+     * Delete all subscribers from storage. Asynchronous.
+     * @return CompletableFuture Integer Total number of affected rows.
+     */
+    @Async("executor")
+    public CompletableFuture<Integer> deleteSubscribers() {
+        CompletableFuture<Integer> subscribed = deleteSubscribers(SubscriberStatus.SUBSCRIBED);
+        CompletableFuture<Integer> unsubscribed = deleteSubscribers(SubscriberStatus.UNSUBSCRIBED);
+
+        return subscribed.thenCombine(unsubscribed, Integer::sum);
     }
 }
