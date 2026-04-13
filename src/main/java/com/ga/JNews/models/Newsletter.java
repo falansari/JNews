@@ -39,14 +39,12 @@ public class Newsletter {
     /**
      * Newsletter's HTML body when sent as e-mail. Supports rich formatting.
      */
-    @Lob
     @Column(nullable = false)
     private String bodyHtml;
 
     /**
      * Newsletter's optional plain-text fallback in case HTML cannot be loaded to subscriber.
      */
-    @Lob
     @Column(nullable = false)
     private String bodyText;
 
