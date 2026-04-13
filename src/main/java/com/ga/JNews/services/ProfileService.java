@@ -61,7 +61,7 @@ public class ProfileService {
 
         String firstName = profile.getFirstName();
         String lastName = profile.getLastName();
-        String photo = Objects.requireNonNull(uploads.downloadImage(uploadImagePath, "placeholder.png").getBody()).getFilename();
+        String photo = Objects.requireNonNull(uploads.downloadFile(uploadImagePath, "placeholder.png").getBody()).getFilename();
 
         if (firstName == null || lastName == null) {
             throw new InformationNotFoundException("First name, last name and photo cannot be null");
@@ -102,7 +102,7 @@ public class ProfileService {
 
         if (user == null) throw new InformationNotFoundException("You must login to download profile photo");
 
-        return uploads.downloadImage(uploadImagePath, getProfile().getPhoto());
+        return uploads.downloadFile(uploadImagePath, getProfile().getPhoto());
     }
 
     /**
@@ -113,13 +113,13 @@ public class ProfileService {
     public ResponseEntity<Resource> uploadPhoto(MultipartFile file) {
         Profile profile = getProfile();
 
-        if (profile.getPhoto() != null && !profile.getPhoto().equals("placeholder.png")) uploads.deleteImage(uploadImagePath, profile.getPhoto()); // Delete existing photo from storage
+        if (profile.getPhoto() != null && !profile.getPhoto().equals("placeholder.png")) uploads.deleteFile(uploadImagePath, profile.getPhoto()); // Delete existing photo from storage
 
         String newPhoto = uploads.uploadImage(uploadImagePath, file);
         profile.setPhoto(newPhoto);
         profileRepository.save(profile);
 
-        return uploads.downloadImage(uploadImagePath, profile.getPhoto());
+        return uploads.downloadFile(uploadImagePath, profile.getPhoto());
     }
 
     /**
@@ -130,15 +130,15 @@ public class ProfileService {
         Profile profile = getProfile();
 
         if (profile.getPhoto() == null || profile.getPhoto().equals("placeholder.png")) {
-            return uploads.downloadImage(uploadImagePath, getProfile().getPhoto());
+            return uploads.downloadFile(uploadImagePath, getProfile().getPhoto());
         }
 
-        String defaultPhoto = Objects.requireNonNull(uploads.downloadImage(uploadImagePath, "placeholder.png").getBody()).getFilename();
+        String defaultPhoto = Objects.requireNonNull(uploads.downloadFile(uploadImagePath, "placeholder.png").getBody()).getFilename();
 
-        uploads.deleteImage(uploadImagePath, profile.getPhoto());
+        uploads.deleteFile(uploadImagePath, profile.getPhoto());
         profile.setPhoto(defaultPhoto);
         profileRepository.save(profile);
 
-        return uploads.downloadImage(uploadImagePath, profile.getPhoto());
+        return uploads.downloadFile(uploadImagePath, profile.getPhoto());
     }
 }

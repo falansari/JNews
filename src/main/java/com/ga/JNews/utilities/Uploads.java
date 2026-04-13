@@ -25,11 +25,11 @@ import java.util.UUID;
 public class Uploads {
 
     /**
-     * Upload an image file.
-     * @param uploadPath Path resolved filepath including storage location + image name.
-     * @param image MultipartFile image [PNG, JPEG, JPG]
+     * Upload an image.
+     * @param uploadPath Path resolved filepath including storage location + file name.
+     * @param image MultipartFile JPEG, PNG only
      * @return String new uploaded file's name
-     * @throws BadRequestException Bad upload request handling
+     * @exception BadRequestException invalid image
      */
     public String uploadImage(String uploadPath, MultipartFile image) {
 
@@ -42,23 +42,47 @@ public class Uploads {
             throw new BadRequestException("Invalid image file type. Only .PNG and .JPEG allowed");
         }
 
-        try {
-            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-            Path path = Path.of(uploadPath);
+        return upload(uploadPath, image);
+    }
 
-            Files.createDirectories(path);
+    /**
+     * Upload an HTML file.
+     * @param uploadPath Path resolved filepath including storage location + file name.
+     * @param document MultipartFile .html file only
+     * @return String new uploaded file's name
+     * @exception BadRequestException Bad upload request handling
+     */
+    public String uploadHtmlFile(String uploadPath, MultipartFile document) {
 
-            Files.copy(
-                    image.getInputStream(),
-                    path.resolve(fileName),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
+        if (document.isEmpty()) throw new BadRequestException("File is empty");
 
-            return fileName;
+        String fileType = document.getContentType();
 
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image", e);
+        if (!Objects.equals(fileType, "text/html")) {
+            throw new BadRequestException("Invalid file type. Only .html and .htm allowed");
         }
+
+        return upload(uploadPath, document);
+    }
+
+    /**
+     * Upload a plain text file.
+     * @param uploadPath Path resolved filepath including storage location + file name.
+     * @param document MultipartFile .txt file only
+     * @return String new uploaded file's name
+     * @exception BadRequestException Bad upload request handling
+     */
+    public String uploadTextFile(String uploadPath, MultipartFile document) {
+
+        if (document.isEmpty()) throw new BadRequestException("File is empty");
+
+        String fileType = document.getContentType();
+
+        if (!Objects.equals(fileType, "text/plain")) {
+            throw new BadRequestException("Invalid file type. Only .txt allowed");
+        }
+
+        return upload(uploadPath, document);
     }
 
     /**
@@ -67,7 +91,7 @@ public class Uploads {
      * @param fileName String image's stored filename in database
      * @return ResponseEntity Resource the image.
      */
-    public ResponseEntity<Resource> downloadImage(String uploadPath, String fileName) {
+    public ResponseEntity<Resource> downloadFile(String uploadPath, String fileName) {
         try {
             Path path = Paths.get(uploadPath, fileName);
             Resource resource = new UrlResource(path.toUri());
@@ -85,13 +109,40 @@ public class Uploads {
      * @param uploadPath String File's upload path ["uploads/cpr-images", "uploads/model-images", ...]
      * @param filename String name of the stored file
      */
-    public void deleteImage(String uploadPath, String filename) {
+    public void deleteFile(String uploadPath, String filename) {
         try {
             Path path = Paths.get(uploadPath, filename);
 
             Files.deleteIfExists(path);
         } catch (IOException e) {
             throw new RuntimeException("Failed to delete image", e);
+        }
+    }
+
+    /**
+     * Upload a file to the server.
+     * @param uploadPath String Path to upload file to.
+     * @param file MultipartFile File to upload
+     * @return String Uploaded file's name
+     */
+    private String upload(String uploadPath, MultipartFile file) {
+
+        try {
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path path = Path.of(uploadPath);
+
+            Files.createDirectories(path);
+
+            Files.copy(
+                    file.getInputStream(),
+                    path.resolve(fileName),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            return fileName;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload file", e);
         }
     }
 }
