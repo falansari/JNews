@@ -72,3 +72,24 @@ public class NewsletterController {
                                        @RequestParam("body_text") MultipartFile body_text) {
         return newsletterService.createNewsletter(title, subject, body_html, body_text);
     }
+
+    /**
+     * Update Newsletter's data by its id.
+     * @param id Long Existing newsletter's database ID
+     * @param title String Newsletter's unique title name. If null or already exists in db will be skipped.
+     * @param subject String Newsletter's email subject line. If null will be skipped.
+     * @param body_html MultipartFile Newsletter's .html formatted HTML body file. If empty will be skipped.
+     * @param body_text MultipartFile Newsletter's .txt plain text body file, used as backup when HTML is rejected. If empty will be skipped.
+     * @return Newsletter updated
+     * @exception InformationNotFoundException Newsletter ID doesn't exist
+     * @apiNote String title, String subject, String body_html (full .html document), String body_text (plain-text fallback version)
+     */
+    @PatchMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Newsletter updateNewsletter(@PathVariable("id") Long id,
+                                       @RequestParam("title") String title,
+                                       @RequestParam("subject") String subject,
+                                       @RequestParam("body_html") MultipartFile body_html,
+                                       @RequestParam("body_text") MultipartFile body_text) {
+        return newsletterService.updateNewsletter(id, title, subject, body_html, body_text);
+    }
+
