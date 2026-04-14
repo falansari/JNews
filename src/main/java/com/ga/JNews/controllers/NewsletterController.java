@@ -115,3 +115,15 @@ public class NewsletterController {
         return newsletterService.updateNewsletter(id, title, subject, body_html, body_text);
     }
 
+    /**
+     * Hard delete a newsletter from the system.
+     * @param id Long
+     * @return boolean True if successful
+     * @exception InformationNotFoundException Newsletter ID doesn't exist.
+     * @apiNote It deletes the associated body HTML and body text files uploaded onto the server, if any, and all associated mail data as well. IRRECOVERABLE ACTION.
+     */
+    @DeleteMapping("/{id}")
+    public boolean deleteNewsletter(@PathVariable("id") Long id) {
+        return newsletterService.deleteNewsletterById(id);
+    }
+}

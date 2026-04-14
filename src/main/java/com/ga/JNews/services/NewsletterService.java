@@ -185,3 +185,21 @@ public class NewsletterService {
         return uploads.downloadFile(uploadPathBodyText, newsletter.getBodyText());
     }
 
+    /**
+     * Hard delete a newsletter from the system.
+     * @param id Long
+     * @return boolean True if successful
+     * @exception InformationNotFoundException Newsletter ID doesn't exist.
+     * @apiNote It deletes the associated body HTML and body text files uploaded onto the server, if any, and all associated mail data as well. IRRECOVERABLE ACTION.
+     */
+    public boolean deleteNewsletterById(Long id){
+        if (!newsletterRepository.existsById(id)) throw new InformationNotFoundException("Newsletter with id " + id + " not found");
+        Newsletter storedNewsletter = getNewsletterById(id);
+
+        uploads.deleteFile(uploadPathBodyHtml, storedNewsletter.getBodyHtml());
+        uploads.deleteFile(uploadPathBodyText, storedNewsletter.getBodyText());
+
+        newsletterRepository.deleteById(storedNewsletter.getId());
+        return true;
+    }
+}
