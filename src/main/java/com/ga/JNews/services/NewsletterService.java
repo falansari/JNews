@@ -69,7 +69,7 @@ public class NewsletterService {
      * @return Newsletter
      * @exception InformationExistException Newsletter title already exists.
      * @exception BadRequestException Missing data, all fields required.
-     * @apiNote String title, String subject, String body_html (full .html document), String body_text (plain-text fallback version)
+     * @apiNote String title, String subject, String bodyHtml (full .html document), String bodyText (plain-text fallback version)
      */
     public Newsletter createNewsletter(String title, String subject, MultipartFile bodyHtml, MultipartFile bodyText) {
         if (newsletterRepository.existsByTitle(title)) {
@@ -97,7 +97,7 @@ public class NewsletterService {
      * @param bodyText MultipartFile Newsletter's .txt plain text body file, used as backup when HTML is rejected. If empty will be skipped.
      * @return Newsletter updated
      * @exception InformationNotFoundException Newsletter ID doesn't exist
-     * @apiNote Long id, String title, String subject, String body_html (full .html document), String body_text (plain-text fallback version)
+     * @apiNote Long id, String title, String subject, String bodyHtml (full .html document), String bodyText (plain-text fallback version)
      */
     public Newsletter updateNewsletter(Long id, String title, String subject, MultipartFile bodyHtml, MultipartFile bodyText) {
         Newsletter storedNewsletter = getNewsletterById(id);
@@ -140,7 +140,7 @@ public class NewsletterService {
     }
 
     /**
-     * Upload new newsletter's body html file to the server.
+     * Upload new newsletter's body HTML file to the server.
      * @param bodyHtml MultipartFile plain/html
      * @return String Uploaded file's name
      */
@@ -156,3 +156,32 @@ public class NewsletterService {
     private String uploadNewsletterBodyText(MultipartFile bodyText) {
         return uploads.uploadTextFile(uploadPathBodyText, bodyText);
     }
+
+    /**
+     * Download newsletter's HTML body.
+     * @param id Long Newsletter's id
+     * @return ResponseEntity Resource The stored file.
+     * @exception InformationNotFoundException Newsletter not found
+     */
+    public ResponseEntity<Resource> downloadNewsletterBodyHtml(Long id) {
+        Newsletter newsletter = getNewsletterById(id);
+
+        if (newsletter == null) throw new InformationNotFoundException("Newsletter with id " + id + " not found");
+
+        return uploads.downloadFile(uploadPathBodyHtml, newsletter.getBodyHtml());
+    }
+
+    /**
+     * Download newsletter's Plain Text body.
+     * @param id Long Newsletter's id
+     * @return ResponseEntity Resource The stored file.
+     * @exception InformationNotFoundException Newsletter not found
+     */
+    public ResponseEntity<Resource> downloadNewsletterBodyText(Long id) {
+        Newsletter newsletter = getNewsletterById(id);
+
+        if (newsletter == null) throw new InformationNotFoundException("Newsletter with id " + id + " not found");
+
+        return uploads.downloadFile(uploadPathBodyText, newsletter.getBodyText());
+    }
+
