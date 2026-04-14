@@ -6,7 +6,9 @@ import com.ga.JNews.exceptions.InformationNotFoundException;
 import com.ga.JNews.models.Newsletter;
 import com.ga.JNews.services.NewsletterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,6 +54,26 @@ public class NewsletterController {
     @GetMapping("/list")
     public CompletableFuture<ArrayList<Newsletter>> getNewsletterList() {
         return newsletterService.getNewsletters();
+    }
+
+    /**
+     * Download newsletter's body HTML file.
+     * @param id Long Newsletter's database ID
+     * @return ResponseEntity Resource .html File
+     */
+    @GetMapping("/{id}/html")
+    public ResponseEntity<Resource> getNewsletterHtmlBody(@PathVariable("id") Long id) {
+        return newsletterService.downloadNewsletterBodyHtml(id);
+    }
+
+    /**
+     * Download newsletter's body plain text file.
+     * @param id Long Newsletter's database ID
+     * @return ResponseEntity Resource .html File
+     */
+    @GetMapping("/{id}/text")
+    public ResponseEntity<Resource> getNewsletterTextBody(@PathVariable("id") Long id) {
+        return newsletterService.downloadNewsletterBodyText(id);
     }
 
     /**
