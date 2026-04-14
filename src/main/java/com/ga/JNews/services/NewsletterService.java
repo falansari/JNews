@@ -19,8 +19,8 @@ import java.util.concurrent.CompletableFuture;
 public class NewsletterService {
     private final NewsletterRepository newsletterRepository;
     private final Uploads uploads;
-    private final String uploadPathBodyHtml = "uploads/newsletters/bodyHtml";
-    private final String uploadPathBodyText = "uploads/newsletters/bodyText";
+    public final String uploadPathBodyHtml = "uploads/newsletters/bodyHtml";
+    public final String uploadPathBodyText = "uploads/newsletters/bodyText";
 
     @Autowired
     public NewsletterService(NewsletterRepository newsletterRepository, Uploads uploads) {

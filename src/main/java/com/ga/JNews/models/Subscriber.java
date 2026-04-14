@@ -1,5 +1,6 @@
 package com.ga.JNews.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "subscribers")
@@ -27,6 +29,10 @@ public class Subscriber {
 
     @Column(nullable = false)
     private SubscriberStatus status; // Had just subbed when record was made.
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subscriber")
+    private List<Email> emails;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
