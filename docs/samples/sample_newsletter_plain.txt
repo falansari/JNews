@@ -1,0 +1,6 @@
+{{title}}
+Hello {{subscriber}},
+
+This is a sample newsletter for testing only.
+
+Read more at https://fatimamakes.com
