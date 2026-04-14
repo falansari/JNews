@@ -89,6 +89,57 @@ public class NewsletterService {
     }
 
     /**
+     * Update Newsletter's data by its id.
+     * @param id Long Existing newsletter's database ID
+     * @param title String Newsletter's unique title name. If null or already exists in db will be skipped.
+     * @param subject String Newsletter's email subject line. If null will be skipped.
+     * @param bodyHtml MultipartFile Newsletter's .html formatted HTML body file. If empty will be skipped.
+     * @param bodyText MultipartFile Newsletter's .txt plain text body file, used as backup when HTML is rejected. If empty will be skipped.
+     * @return Newsletter updated
+     * @exception InformationNotFoundException Newsletter ID doesn't exist
+     * @apiNote Long id, String title, String subject, String body_html (full .html document), String body_text (plain-text fallback version)
+     */
+    public Newsletter updateNewsletter(Long id, String title, String subject, MultipartFile bodyHtml, MultipartFile bodyText) {
+        Newsletter storedNewsletter = getNewsletterById(id);
+
+        if (storedNewsletter == null) throw new InformationNotFoundException("Newsletter with id " + id + " not found");
+
+        // update title
+        if (title != null && !title.equals(storedNewsletter.getTitle())) {
+            if (!newsletterRepository.existsByTitle(title)) {
+                storedNewsletter.setTitle(title);
+            }
+        }
+
+        // update subject
+        if (subject != null && !subject.equals(storedNewsletter.getSubject())) {
+            storedNewsletter.setSubject(subject);
+        }
+
+        // update body_html
+        if (!bodyHtml.isEmpty()) {
+            String uploadedBodyHtml = uploadNewsletterBodyHtml(bodyHtml);
+
+            if (!uploadedBodyHtml.isEmpty()) { // only update records if upload was successful
+                uploads.deleteFile(uploadPathBodyHtml, storedNewsletter.getBodyHtml()); // delete old file
+                storedNewsletter.setBodyHtml(uploadedBodyHtml);
+            }
+        }
+
+        // update body_text
+        if (!bodyText.isEmpty()) {
+            String uploadedBodyText = uploadNewsletterBodyText(bodyText);
+
+            if (!uploadedBodyText.isEmpty()) { // Only update records if upload was successful
+                uploads.deleteFile(uploadPathBodyText, storedNewsletter.getBodyText()); // delete old file
+                storedNewsletter.setBodyText(uploadedBodyText);
+            }
+        }
+
+        return newsletterRepository.save(storedNewsletter);
+    }
+
+    /**
      * Upload new newsletter's body html file to the server.
      * @param bodyHtml MultipartFile plain/html
      * @return String Uploaded file's name
