@@ -26,8 +26,10 @@ public class Email {
     private Long id;
 
     /**
-     * The exact time the email was delivered by the service.
+     * The exact time the email is to be delivered by the service. Defaults to Creation Timestamp.
+     * @apiNote Unimplemented feature. TODO: Use for scheduling emails support.
      */
+    @CreationTimestamp
     @Column
     private LocalDateTime deliveryTime;
 

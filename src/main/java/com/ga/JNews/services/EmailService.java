@@ -2,8 +2,10 @@ package com.ga.JNews.services;
 
 import com.ga.JNews.exceptions.BadRequestException;
 import com.ga.JNews.exceptions.InformationNotFoundException;
+import com.ga.JNews.models.Email;
 import com.ga.JNews.models.Newsletter;
 import com.ga.JNews.models.Subscriber;
+import com.ga.JNews.models.enums.EmailStatus;
 import com.ga.JNews.models.enums.SubscriberStatus;
 import com.ga.JNews.repositories.EmailRepository;
 import com.ga.JNews.utilities.Uploads;
@@ -32,6 +34,23 @@ public class EmailService {
         this.newsletterService = newsletterService;
         this.subscriberService = subscriberService;
         this.uploads = uploads;
+    }
+
+    /**
+     * Create new email record.
+     * @param status EmailStatus [UNOPENED, OPENED, BOUNCED]
+     * @param newsletter Newsletter
+     * @param subscriber Subscriber
+     * @return Email
+     * @apiNote Status should default to UNOPENED for successfully delivered mail, and BOUNCED for failures.
+     */
+    private Email createEmail(EmailStatus status, Newsletter newsletter, Subscriber subscriber) {
+        Email email = new Email();
+        email.setStatus(status);
+        email.setNewsletter(newsletter);
+        email.setSubscriber(subscriber);
+
+        return emailRepository.save(email);
     }
 
     public void sendNewsletterEmail(Long newsletterId, SubscriberStatus subscriberStatus) {
@@ -71,9 +90,11 @@ public class EmailService {
 
                 mailSender.send(message);
 
-                // TODO: save sent e-mail records to db
+                createEmail(EmailStatus.UNOPENED, newsletter, subscriber);
             } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                createEmail(EmailStatus.BOUNCED, newsletter, subscriber);
+
+                throw new BadRequestException("Failed to send email: " + e.getMessage());
             }
         }
     }
