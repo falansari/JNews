@@ -116,6 +116,16 @@ public class SubscriberController {
     }
 
     /**
+     * Get subscribers list filtered by status.
+     * @param status SubscriberStatus [SUBSCRIBED, UNSUBSCRIBED]
+     * @return ArrayList Subscriber
+     */
+    @GetMapping("/list/{status}")
+    public ArrayList<Subscriber> getSubscribersListByStatus(@PathVariable("status") SubscriberStatus status) {
+        return subscriberService.getSubscribersByStatus(status);
+    }
+
+    /**
      * Download stored subscribers CSV file. Asynchronous operation, supports multithreading.
      */
     @GetMapping("/export")

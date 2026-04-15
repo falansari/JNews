@@ -1,5 +1,6 @@
 package com.ga.JNews.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "newsletters")
@@ -47,6 +49,10 @@ public class Newsletter {
      */
     @Column(nullable = false)
     private String bodyText;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "newsletter")
+    private List<Email> emails;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

@@ -65,6 +65,19 @@ public class SubscriberService {
     }
 
     /**
+     * Get list of subscribers by their status.
+     * @return ArrayList Subscriber
+     * @apiNote SubscriberStatus [SUBSCRIBED, UNSUBSCRIBED]
+     */
+    public ArrayList<Subscriber> getSubscribersByStatus(SubscriberStatus status) {
+        ArrayList<Subscriber> subscribers = subscriberRepository.findAllByStatus(status);
+
+        if (subscribers == null) throw new InformationNotFoundException("There are no subscribers with status " + status + ".");
+
+        return subscribers;
+    }
+
+    /**
      * Create a new subscriber.
      * @param subscriber Subscriber
      * @apiNote email, name (optional), status (SUBSCRIBED, UNSUBSCRIBED) (optional)

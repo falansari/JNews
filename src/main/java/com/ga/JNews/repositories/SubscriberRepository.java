@@ -20,6 +20,8 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
     @Async("executor")
     CompletableFuture<ArrayList<Subscriber>> findAllBy(); // Find all but multithreaded
 
+    ArrayList<Subscriber> findAllByStatus(SubscriberStatus status);
+
     @Async("executor")
     @Transactional
     @Modifying
