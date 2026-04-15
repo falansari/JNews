@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -66,21 +65,16 @@ public class SubscriberService {
     }
 
     /**
-     * Get list of subscribers' e-mail addresses by their status.
-     * @return ArrayList String Email Addresses
+     * Get list of subscribers by their status.
+     * @return ArrayList Subscriber
+     * @apiNote SubscriberStatus [SUBSCRIBED, UNSUBSCRIBED]
      */
-    public String[] getSubscribersEmailAddresses(SubscriberStatus status) {
+    public ArrayList<Subscriber> getSubscribersByStatus(SubscriberStatus status) {
         ArrayList<Subscriber> subscribers = subscriberRepository.findAllByStatus(status);
 
         if (subscribers == null) throw new InformationNotFoundException("There are no subscribers with status " + status + ".");
 
-        ArrayList<String> emailAddresses = new ArrayList<>();
-
-        for (Subscriber subscriber : subscribers) {
-            emailAddresses.add(subscriber.getEmail());
-        }
-
-        return emailAddresses.toArray(new String[0]);
+        return subscribers;
     }
 
     /**
