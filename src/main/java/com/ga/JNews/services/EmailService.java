@@ -13,6 +13,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -53,6 +54,12 @@ public class EmailService {
         return emailRepository.save(email);
     }
 
+    /**
+     * Send newsletter e-mails to list of subscribers by their status. Asynchronous operation.
+     * @param newsletterId Long Newsletter's database ID
+     * @param subscriberStatus SubscriberStatus SUBSCRIBED, UNSUBSCRIBED
+     */
+    @Async("executor")
     public void sendNewsletterEmail(Long newsletterId, SubscriberStatus subscriberStatus) {
         Newsletter newsletter = newsletterService.getNewsletterById(newsletterId);
         if (newsletter == null) throw new InformationNotFoundException("Newsletter with id " + newsletterId + " not found");
@@ -74,7 +81,6 @@ public class EmailService {
         ArrayList<Subscriber> recipients = subscriberService.getSubscribersByStatus(subscriberStatus);
         if (recipients == null) throw new InformationNotFoundException("There are no recipients");
 
-        // TODO: make the operation Asynchronous
         for (Subscriber subscriber : recipients) {
             try {
                 // Replace newsletter's {{subscriber}} placeholder
