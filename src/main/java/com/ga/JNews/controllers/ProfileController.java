@@ -20,7 +20,7 @@ public class ProfileController {
     }
 
     /**
-     * Get user's profile.
+     * Get logged-in user's profile.
      * @return Profile
      */
     @GetMapping("")
