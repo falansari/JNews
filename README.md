@@ -96,7 +96,7 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 ## 📃 Project Report
 
 ### 📆 Project Management Board
-[Github Project](https://github.com/users/falansari/projects/14/views/1)
+[GitHub Project](https://github.com/users/falansari/projects/14/views/1)
 
 ### 👥 User Stories
 
@@ -147,3 +147,14 @@ bean on any service method that needs multithreading, and it will become fully a
 no additional code required. ReadWrite locks are used for async methods that are writing into a file.
 
 ---
+
+## 📝 Installation & Testing Instructions
+1. [Clone the repository](https://github.com/falansari/JNews.git).
+2. Create an empty database named **jnews** in pgAdmin 4, or whatever you named it in application.properties.
+3. Copy application-example.properties file, and name the copy application.properties, and update the details inside for your connection info.
+4. For Endpoint Testing: import POSTMAN endpoints collection from [JNews.postman_collection.json](docs/JNews.postman_collection.json) file in docs folder, 
+and update the collection's **base_url variable** to `http://127.0.0.1:8090/` (change :#### to match your chosen port number in properties) and **users_base_url** to `auth/users/`
+5. Create the default admin account using `/auth/users/register/default` REST endpoint. Use your own e-mail address to get verification token.
+6. You can try out the import/export feature subscribers using the included [dummy_emails.csv](docs/samples/dummy_emails.csv) and [new_subscribers_emails.csv](docs/samples/new_subscribers_emails.csv) files.
+7. You can use [sample_newsletter_rich.html](docs/samples/sample_newsletter_rich.html) and [sample_newsletter_plain.txt](docs/samples/sample_newsletter_plain.txt) files to try out creating/managing newsletters.
+8. I recommend adding a few real e-mails to subscribers list to test the send e-mail endpoint, so you can receive the newsletters.
