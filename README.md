@@ -1,4 +1,4 @@
-# 🗞 JNews
+# 📰 JNews
 Java Spring Boot newsletter campaign management app. Get subscribers to sign up to your newsletter,
 manage your newsletter publications, and e-mail them to your subscribers. Utilizes multithreading and concurrency techniques
 for efficient mailing and subscriber management operations. Completely self-contained and self-hostable app, no third party
@@ -9,7 +9,7 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 
 ---
 
-## Entity Relationship Diagram
+## 🖇 Entity Relationship Diagram
 
 ![ERD Diagram](docs/ERD.drawio.png "ERD Diagram")
 
@@ -17,7 +17,7 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 
 ## 📖 JNews API Endpoints
 
-### Authentication
+### 🔐 Authentication
 - **Security Scheme**: Bearer Token (`Authorization: Bearer <token>`)
 
 | Category         | Method | Endpoint                       | Description                                                         | Example Request Body / Params                                                                                  |
@@ -62,7 +62,7 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 |                  | DELETE | `/subscribers/delete/{status}` | Delete subscribers by status (async)                                | Path param: `status=UNSUBSCRIBED`                                                                              |
 | **Emails**       | POST   | `/emails/send`                 | Send newsletter email to subscribers filtered by status             | Query params: `newsletterId=6`, `subscriberStatus=SUBSCRIBED`                                                  |
 
-### Notes
+### 📝 Notes
 - All endpoints require **Bearer token authentication** unless otherwise specified.
 - Use `application/json` for request bodies.
 - Responses are not detailed in this spec — adapt based on your implementation.
@@ -90,5 +90,34 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 **Build & Tooling**
 - Maven Compiler Plugin (Java 17, annotation processing)
 - Spring Boot [Maven Plugin](https://maven.apache.org/) (packaging, running)
+
+---
+
+## 📃 Project Report
+
+### 📆 Project Management Board
+[Github Project](https://github.com/users/falansari/projects/14/views/1)
+
+### 👥 User Stories
+
+#### 👑 Admin User Stories
+- As an **admin**, I want to **soft delete user accounts by ID**, so that I can manage system integrity without permanently losing data.
+- As an **admin**, I want to **create other admin accounts**, so that I can delegate system management responsibilities.
+- As an **admin**, I want to **log in securely with authentication**, so that only authorized personnel can access sensitive functionality.
+- As an **admin**, I want to **have full access to all system features**, so that I can oversee and maintain the entire application.
+
+#### 📢 Campaign Manager User Stories
+- As a **campaign manager**, I want to **create, update, and delete newsletters**, so that I can manage communication content effectively.
+- As a **campaign manager**, I want to **send newsletters to subscribers filtered by status**, so that I can target the right audience.
+- As a **campaign manager**, I want to **manage subscribers (add, update, import, export, delete)**, so that I can maintain an accurate mailing list.
+- As a **campaign manager**, I want to **subscribe or unsubscribe members by email**, so that I can respect user preferences.
+- As a **campaign manager**, I want to **manage my own user profile (update name, upload/delete photo)**, so that my account reflects my identity.
+- As a **campaign manager**, I want to **log in securely with authentication**, so that I can access management features safely.
+
+#### ✉️ Subscriber User Stories
+- As a **subscriber**, I want to **subscribe my email address to the mailing list**, so that I can receive newsletters.
+- As a **subscriber**, I want to **unsubscribe my email address from the mailing list**, so that I can stop receiving newsletters.
+- As a **subscriber**, I want to **re-subscribe if I previously unsubscribed**, so that I can rejoin the mailing list easily.
+- As a **subscriber**, I want to **perform these actions without logging in**, so that the process is simple and accessible.
 
 ---
