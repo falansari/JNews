@@ -1,0 +1,1142 @@
+{
+  "info": {
+    "_postman_id": "9b26a15e-a7ab-4405-8d4a-71a1982e5df1",
+    "name": "JNews",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Profiles",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "id": "82670379-fc1d-480b-a222-c7aa292e52f0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}profile",
+              "host": [
+                "{{base_url}}profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User Profile",
+          "id": "80dca1f1-34fc-4169-bb6d-46b70035abd5",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Tenma\",\r\n    \"lastName\": \"Metsuki\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}profile",
+              "host": [
+                "{{base_url}}profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User's Profile",
+          "id": "6aa875a2-e66a-476b-b384-34cc8aa2da4e",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Ash\",\r\n    \"lastName\": \"Ketchum\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}profile",
+              "host": [
+                "{{base_url}}profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download User's Profile Photo",
+          "id": "c9f85891-1c3c-417d-b19f-e74e63920c04",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}profile/photo",
+              "host": [
+                "{{base_url}}profile"
+              ],
+              "path": [
+                "photo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload User's Profile Photo",
+          "id": "c2c7662e-8c6e-472c-8f60-935fcc0a351f",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/girl2.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}profile/photo",
+              "host": [
+                "{{base_url}}profile"
+              ],
+              "path": [
+                "photo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User's Profile Photo",
+          "id": "b9ef2241-e1d2-46d4-951b-4b5478de1976",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/guy.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}profile/photo",
+              "host": [
+                "{{base_url}}profile"
+              ],
+              "path": [
+                "photo"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "00cf1714-90df-411c-a173-9937f8b2b320"
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Register User",
+          "id": "127bf24b-d0ce-4f24-a17a-2b6e74af2721",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"fatima.a.alansari@hotmail.com\",\r\n    \"password\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}register",
+              "host": [
+                "{{base_url}}{{users_base_url}}register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Default Admin User",
+          "id": "4fffd60c-6599-4bd8-ad69-f9c0ffe27fbb",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"fatima@fatimamakes.com\",\r\n    \"password\": \"@dm!nP@$$\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}register/default",
+              "host": [
+                "{{base_url}}{{users_base_url}}register"
+              ],
+              "path": [
+                "default"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin User",
+          "id": "e4c1a85a-6537-468e-aa7c-bd789eb32ce2",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"twoseasgamesstudio@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}register/admin",
+              "host": [
+                "{{base_url}}{{users_base_url}}register"
+              ],
+              "path": [
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User (Default Admin)",
+          "id": "a4dac6f2-24b6-4ec3-a83b-ba9a100ac096",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"fatima@fatimamakes.com\",\r\n    \"password\": \"@dm!nP@$$\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}login",
+              "host": [
+                "{{base_url}}{{users_base_url}}login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "id": "430070dc-dd34-4473-905d-44e9c865d22d",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"tenmametsuki@gmail.com\",\r\n    \"password\": \"888\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}login",
+              "host": [
+                "{{base_url}}{{users_base_url}}login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "id": "4a9c4ff0-1974-48b9-9a1d-9762bd1d30b1",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"56b7b6c5-c560-4eb7-abfa-50f7ab1c3e9d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}verify?token=85322639-6a6d-4b2b-89f3-b51732a637ce",
+              "host": [
+                "{{base_url}}{{users_base_url}}verify"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "85322639-6a6d-4b2b-89f3-b51732a637ce"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email from URL",
+          "id": "099c122b-a373-4705-ab27-0bf31aed5d4a",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"56b7b6c5-c560-4eb7-abfa-50f7ab1c3e9d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/auth/users/verify?token=9b73d32b-5707-44d3-b7ef-9acacab07138",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "auth",
+                "users",
+                "verify"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "9b73d32b-5707-44d3-b7ef-9acacab07138"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reissue Verification Token",
+          "id": "26cde174-7281-45fb-9305-f50b6d9e9432",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"56b7b6c5-c560-4eb7-abfa-50f7ab1c3e9d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}token?token=259c34c4-e8cf-4976-b223-8216deea0861",
+              "host": [
+                "{{base_url}}{{users_base_url}}token"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "259c34c4-e8cf-4976-b223-8216deea0861"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "id": "855daed6-0f0a-4fe5-bbef-3cf94706a240",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"oldPassword\": \"123\",\r\n    \"newPassword\": \"456\",\r\n    \"confirmNewPassword\": \"456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}change-password",
+              "host": [
+                "{{base_url}}{{users_base_url}}change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "id": "adad57d2-b276-48ce-837d-78262e9b6ee3",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"tenmametsuki@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}forgot-password",
+              "host": [
+                "{{base_url}}{{users_base_url}}forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "id": "26b377d6-f72d-4169-8380-fb49b0b87f8f",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"b1d97db9-06d9-467f-b48f-1c23fa91a299\",\r\n    \"password\": \"888\",\r\n    \"confirmPassword\": \"888\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/auth/users/reset?token=0e1c4265-529c-443d-86c0-69c1f9da3be7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "auth",
+                "users",
+                "reset"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "0e1c4265-529c-443d-86c0-69c1f9da3be7"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Soft Delete User",
+          "id": "b038bc0c-605b-4563-9147-034b91f29cea",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}{{users_base_url}}1",
+              "host": [
+                "{{base_url}}{{users_base_url}}1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "516a28d0-27d9-41b8-82b6-e15a05068ad8"
+    },
+    {
+      "name": "Subscribers",
+      "item": [
+        {
+          "name": "Get Subscriber by ID",
+          "id": "af1e27a1-807f-46d5-84af-6592729a463c",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/150",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "150"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subscriber by E-Mail",
+          "id": "e70de4bc-a410-437e-950b-ffb9d75a71ed",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers?email=fatima.a.alansari@hotmail.com",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "fatima.a.alansari@hotmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add a New Subscriber",
+          "id": "2eae0d7f-c63b-4325-811e-597955be3452",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"tenmametsuki@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}subscribers/subscribe",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "subscribe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit a Subscriber",
+          "id": "32ea0145-6f1d-40a8-8d12-c1fcf9ee5bee",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"seeusoon92@hotmail.com\",\r\n    \"name\": \"Fatima Alansari\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}subscribers/150",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "150"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Re-subscribe an Existing Subscription Member",
+          "id": "63d96a4f-821f-42ed-b991-5d414d5ef639",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/subscribe?email=seeusoon92@hotmail.com",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "subscribe"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "seeusoon92@hotmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unsubscribe a Subscription Member",
+          "id": "697fda1c-6252-4724-a287-2fe6c13d27c3",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/unsubscribe?email=seeusoon92@hotmail.com",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "unsubscribe"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "seeusoon92@hotmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a Subscriber",
+          "id": "7dcfd8ff-8ad4-4645-8863-1b6303ba3fe2",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/1",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subscribers List",
+          "id": "c208bae5-e155-4130-ac00-36f4a62915c9",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/list",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subscribers List By Status",
+          "id": "c4d35476-8229-445b-ac4e-d2bd162bf250",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/list/UNSUBSCRIBED",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "list",
+                "UNSUBSCRIBED"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Subscribers List",
+          "id": "a7ce9c25-18a0-4c26-af01-19e521a77c77",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}subscribers/export",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "export"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add New Subscribers",
+          "id": "e35c8194-8f0d-4ad2-bce9-90b26f49a854",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "contentType": "text/csv",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/new_subscribers_emails.csv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}subscribers/add",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Import Subscribers",
+          "id": "1206c815-a647-48d8-82e2-413b77b5970a",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "contentType": "text/csv",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/exports/subscribers_09-04-2026_023504.csv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}subscribers/import",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "import"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete All Subscribers",
+          "id": "b0a30031-82c9-47d8-8663-8fcfec5070ff",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "contentType": "text/csv",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/exports/subscribers_09-04-2026_023504.csv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}subscribers/delete",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Subscribers by Status",
+          "id": "4fef44a7-d2db-4cba-90c0-668223363b58",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "contentType": "text/csv",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/exports/subscribers_09-04-2026_023504.csv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}subscribers/delete/UNSUBSCRIBED",
+              "host": [
+                "{{base_url}}subscribers"
+              ],
+              "path": [
+                "delete",
+                "UNSUBSCRIBED"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "703dc76b-0302-4689-bd29-5d073da3b484"
+    },
+    {
+      "name": "Newsletters",
+      "item": [
+        {
+          "name": "Get Newsletter by ID",
+          "id": "fc0f71fc-ad94-4e18-85d2-ee6636f08bb0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}newsletters/6",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Newsletter by Title",
+          "id": "248ad326-d7ee-457b-a24c-2a81230a6e47",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}newsletters?title=Sample Newsletter %231",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "query": [
+                {
+                  "key": "title",
+                  "value": "Sample Newsletter #1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Newsletters List",
+          "id": "4cfdcc20-5ea7-4291-8e79-9aa44755dee1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}newsletters/list",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download Newsletter's HTML",
+          "id": "dc8ce2c9-45fa-45dc-952a-6e2659da776f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}newsletters/6/html",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "6",
+                "html"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download Newsletter's Plain Text",
+          "id": "e6f1d8fd-0bcf-402a-9a66-116923ad2d0f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}newsletters/6/text",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "6",
+                "text"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add a New Newsletter",
+          "id": "e19057ef-c509-4b1f-87e2-00ec74d300ae",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Sample Newsletter #2",
+                  "contentType": "text/plain",
+                  "type": "text"
+                },
+                {
+                  "key": "subject",
+                  "value": "Sample Newsletter",
+                  "contentType": "text/plain",
+                  "type": "text"
+                },
+                {
+                  "key": "body_html",
+                  "contentType": "text/html",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/sample_newsletter_rich.html"
+                },
+                {
+                  "key": "body_text",
+                  "contentType": "text/plain",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/sample_newsletter_plain.txt"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}newsletters/add",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Newsletter By ID",
+          "id": "a102e60d-d2cb-45e9-8abb-4e07955c15a1",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Sample Newsletter",
+                  "contentType": "text/plain",
+                  "type": "text"
+                },
+                {
+                  "key": "subject",
+                  "value": "Sample Newsletter",
+                  "contentType": "text/plain",
+                  "type": "text"
+                },
+                {
+                  "key": "body_html",
+                  "contentType": "text/html",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/sample_newsletter_rich.html"
+                },
+                {
+                  "key": "body_text",
+                  "contentType": "text/plain",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/sample_newsletter_plain.txt"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}newsletters/6",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a Subscriber",
+          "id": "50b25d89-5972-4094-b29f-e91ca3b88ee1",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}newsletters/7",
+              "host": [
+                "{{base_url}}newsletters"
+              ],
+              "path": [
+                "7"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "5f1d1d9e-0a83-4dc0-b26b-27f56750e346"
+    },
+    {
+      "name": "Emails",
+      "item": [
+        {
+          "name": "Send Newsletter Email",
+          "id": "8948d4d1-b09e-47e9-be66-5ba0b9a8b114",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Sample Newsletter #2",
+                  "contentType": "text/plain",
+                  "type": "text"
+                },
+                {
+                  "key": "subject",
+                  "value": "Sample Newsletter",
+                  "contentType": "text/plain",
+                  "type": "text"
+                },
+                {
+                  "key": "body_html",
+                  "contentType": "text/html",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/sample_newsletter_rich.html"
+                },
+                {
+                  "key": "body_text",
+                  "contentType": "text/plain",
+                  "type": "file",
+                  "src": "/D:/Projects/General Assembly/Java Developer Bootcamp/jdb/projects/JNews/docs/samples/sample_newsletter_plain.txt"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}emails/send?newsletterId=6&subscriberStatus=SUBSCRIBED",
+              "host": [
+                "{{base_url}}emails"
+              ],
+              "path": [
+                "send"
+              ],
+              "query": [
+                {
+                  "key": "newsletterId",
+                  "value": "6"
+                },
+                {
+                  "key": "subscriberStatus",
+                  "value": "SUBSCRIBED"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "3719e2f9-ad96-4454-9cc1-462c8b13e094"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZW5tYW1ldHN1a2lAZ21haWwuY29tIiwiaWF0IjoxNzc2MjY2NjA2LCJleHAiOjE3NzYzNTMwMDZ9.ycRygoO3Zo9xXPP02sQL1_wdDuK3znbT5J9Tr0gUWG0",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "aa6ed297-abdc-4bf5-b61d-7724a7285e11",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "37d8af29-e74f-4b12-96e9-b30ecef0e39e",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "e53b99a7-d7b2-4591-a899-a5d809ae1417",
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "id": "c7ed4f05-25f2-41e0-9658-d64cf4a273b6",
+      "key": "users_base_url",
+      "value": ""
+    }
+  ]
+}
