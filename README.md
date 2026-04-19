@@ -1,4 +1,30 @@
 # 📰 JNews
+
+## Table of Contents
+<!-- TOC -->
+* [📰 JNews](#-jnews)
+  * [Table of Contents](#table-of-contents)
+  * [Description](#description)
+  * [🖇 Entity Relationship Diagram](#-entity-relationship-diagram)
+  * [📖 JNews API Endpoints](#-jnews-api-endpoints)
+    * [🔐 Authentication](#-authentication)
+    * [📝 Notes](#-notes)
+  * [🛠 Tools & Technologies](#-tools--technologies)
+  * [📃 Project Report](#-project-report)
+    * [📆 Project Management Board](#-project-management-board)
+    * [👥 User Stories](#-user-stories)
+      * [👑 Admin User Stories](#-admin-user-stories)
+      * [📢 Campaign Manager User Stories](#-campaign-manager-user-stories)
+      * [✉️ Subscriber User Stories](#-subscriber-user-stories)
+    * [👩🏽‍💻 General Approach to Development](#-general-approach-to-development)
+    * [💀 Major Hurdles & Challenges](#-major-hurdles--challenges)
+  * [📝 Installation & Testing Instructions](#-installation--testing-instructions)
+<!-- TOC -->
+
+---
+
+## Description
+
 Java Spring Boot newsletter campaign management app. Get subscribers to sign up to your newsletter,
 manage your newsletter publications, and e-mail them to your subscribers. Utilizes multithreading and concurrency techniques
 for efficient mailing and subscriber management operations. Completely self-contained and self-hostable app, no third party
