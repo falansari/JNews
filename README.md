@@ -120,4 +120,30 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 - As a **subscriber**, I want to **re-subscribe if I previously unsubscribed**, so that I can rejoin the mailing list easily.
 - As a **subscriber**, I want to **perform these actions without logging in**, so that the process is simple and accessible.
 
+
+### 👩🏽‍💻 General Approach to Development
+My approach to developing any app always follows a set sequence of steps I take mostly in order:
+1. **Brainstorm** what the app is, what it will do, how it will do it. Rough sketching the ERD and list of functionality. Takes 1-2hrs.
+2. **Finalize ERD** design by cleaning up the rough sketch. This step requires some research into the feasibility of the project, and making adjustments based on that. Takes 1-2hrs.
+3. **Plan the development** by creating detailed issues, milestones and project board. This makes it clear exactly what needs to get delivered and when. Takes 1-2hrs with ongoing updates as needed.
+4. **Develop the app** step by step, focusing on one system at a time, one component of that system at a time. Any app that needs user system I start with that first, and move on to the app's actual functionality after.
+5. **Test the app** while developing it, I do not merge a feature nor move on from it until I have fully tested it, verified how it works, optimized it and finalized the code for it. This way nothing is submitted without meeting base quality requirements.
+6. **Write the documentation** after finishing all basic requirements and are ready to release v1.0.0 of the app.
+
+This app is built to use Asynchronous multithreaded functions for any mass-operation endpoint, such as export/import subscribers.
+
+### 💀 Major Hurdles & Challenges
+
+The biggest challenge I faced in this project was how to make multi-threading work with Spring Security. 
+Due to how the security chain works, the authentication token was not being preserved nor passed on between requests, 
+it was being used once per-request and discarded. However, an asynchronous operation can make multiple requests in the same operation, 
+thus only the first operation of an async function was getting through while the rest were getting authorization failure issues.
+
+My solution was to embed async support directly into the security chain by building and storing security context in the JWT request filter,
+and creating an async configuration executor that delegates that security context.
+
+The result is a very clean and simple multi-threading support for any method that requires it, all that is needed is to add @Async("executor")
+bean on any service method that needs multithreading, and it will become fully asynchronous and multithreaded to available cores limit, 
+no additional code required. ReadWrite locks are used for async methods that are writing into a file.
+
 ---
