@@ -9,6 +9,12 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 
 ---
 
+## Entity Relationship Diagram
+
+![ERD Diagram](docs/ERD.drawio.png "ERD Diagram")
+
+---
+
 ## 📖 JNews API Endpoints
 
 ### Authentication
@@ -60,5 +66,29 @@ You can otherwise import a list of subscriber e-mails and message those instead.
 - All endpoints require **Bearer token authentication** unless otherwise specified.
 - Use `application/json` for request bodies.
 - Responses are not detailed in this spec — adapt based on your implementation.
+
+---
+
+## 🛠 Tools & Technologies
+
+**Backend Layer**
+- Spring Boot [(spring.io)](https://start.spring.io/) (Starter Parent, WebMVC, Data JPA, Security, Mail)
+- Spring Boot DevTools (hot reload)
+
+**Database Layer**
+- [PostgreSQL](https://jdbc.postgresql.org/) (runtime driver)
+- JPA/Hibernate (via Spring Data JPA)
+
+**Security Layer**
+- Spring Security
+- [JJWT](https://github.com/jwtk/jjwt) (API, Impl, Jackson for JWT authentication)
+
+**Utilities**
+- [Project Lombok](https://projectlombok.org/) (boilerplate reduction)
+- Spring Boot Starter WebMVC Test (unit/integration testing)
+
+**Build & Tooling**
+- Maven Compiler Plugin (Java 17, annotation processing)
+- Spring Boot [Maven Plugin](https://maven.apache.org/) (packaging, running)
 
 ---
