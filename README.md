@@ -181,6 +181,7 @@ no additional code required. ReadWrite locks are used for async methods that are
 4. For Endpoint Testing: import POSTMAN endpoints collection from [JNews.postman_collection.json](docs/JNews.postman_collection.json) file in docs folder, 
 and update the collection's **base_url variable** to `http://127.0.0.1:8090/` (change :#### to match your chosen port number in properties) and **users_base_url** to `auth/users/`
 5. Create the default admin account using `/auth/users/register/default` REST endpoint. Use your own e-mail address to get verification token.
-6. You can try out the import/export feature subscribers using the included [dummy_emails.csv](docs/samples/dummy_emails.csv) and [new_subscribers_emails.csv](docs/samples/new_subscribers_emails.csv) files.
-7. You can use [sample_newsletter_rich.html](docs/samples/sample_newsletter_rich.html) and [sample_newsletter_plain.txt](docs/samples/sample_newsletter_plain.txt) files to try out creating/managing newsletters.
-8. I recommend adding a few real e-mails to subscribers list to test the send e-mail endpoint, so you can receive the newsletters.
+6. You can try out the add new subscribers feature using the included [dummy_emails.csv](docs/samples/dummy_emails.csv) and [new_subscribers_emails.csv](docs/samples/new_subscribers_emails.csv) files.
+7. To test import subscribers feature, export them first, and you can re-import the export, or use the included [import_subscribers.csv](docs/samples/import_subscribers.csv). Make changes to it to see effects (add new rows, change info of existing, etc).
+8. You can use [sample_newsletter_rich.html](docs/samples/sample_newsletter_rich.html) and [sample_newsletter_plain.txt](docs/samples/sample_newsletter_plain.txt) files to try out creating/managing newsletters.
+9. I recommend adding a few real e-mails to subscribers list to test the send e-mail endpoint, so you can receive the newsletters.
